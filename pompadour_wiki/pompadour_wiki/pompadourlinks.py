@@ -10,15 +10,15 @@ def build_url(label, base, end):
     """ Build a url from the label, a base, and an end. """
 
     clean_label = re.sub(r'([ ]+_)|(_[ ]+)|([ ]+)', '_', label)
-    return '{0}{1}{2}'.format(base, clean_label, end)
+    return u'{0}{1}{2}'.format(base, clean_label, end)
 
 class PompadourLinkExtension(markdown.Extension):
     def __init__(self, configs):
         self.config = {
-            'base_url': ['/', 'String to append to beginning of URL.'],
-            'end_url': ['/', 'String to append to end of URL.'],
-            'html_class': ['pompadourlink', 'CSS hook. Leave blank for none.'],
-            'build_url': [build_url, 'Callable formats URL from label.'],
+            u'base_url': [u'/', u'String to append to beginning of URL.'],
+            u'end_url': [u'/', u'String to append to end of URL.'],
+            u'html_class': [u'pompadourlink', u'CSS hook. Leave blank for none.'],
+            u'build_url': [build_url, u'Callable formats URL from label.'],
         }
 
         # Override defaults with user settings
@@ -31,7 +31,7 @@ class PompadourLinkExtension(markdown.Extension):
         POMPADOURLINK_RE = r'\[\[([\w\0-9_ -/]+)\]\]'
         pattern = PompadourLinks(POMPADOURLINK_RE, self.getConfigs())
         pattern.md = md
-        md.inlinePatterns.add('pompadourlink', pattern, "<not_strong")
+        md.inlinePatterns.add(u'pompadourlink', pattern, "<not_strong")
 
 class PompadourLinks(markdown.inlinepatterns.Pattern):
     def __init__(self, pattern, config):
@@ -44,13 +44,13 @@ class PompadourLinks(markdown.inlinepatterns.Pattern):
             base_url, end_url, html_class = self._getMeta()
 
             label = m.group(2).strip()
-            url = self.config['build_url'](label, base_url, end_url)
+            url = self.config[u'build_url'](label, base_url, end_url)
             a = markdown.util.etree.Element('a')
             a.text = label
-            a.set('href', url)
+            a.set(u'href', url)
 
             if html_class:
-                a.set('class', html_class)
+                a.set(u'class', html_class)
         else:
             a = ''
 
@@ -59,19 +59,19 @@ class PompadourLinks(markdown.inlinepatterns.Pattern):
     def _getMeta(self):
         """ Return meta data or config data. """
 
-        base_url = self.config['base_url']
-        end_url = self.config['end_url']
-        html_class = self.config['html_class']
+        base_url = self.config[u'base_url']
+        end_url = self.config[u'end_url']
+        html_class = self.config[u'html_class']
 
-        if hasattr(self.md, 'Meta'):
-            if self.md.Meta.has_key('pompadour_base_url'):
-                base_url = self.md.Meta['pompadour_base_url'][0]
+        if hasattr(self.md, u'Meta'):
+            if self.md.Meta.has_key(u'pompadour_base_url'):
+                base_url = self.md.Meta[u'pompadour_base_url'][0]
 
-            if self.md.Meta.has_key('pompadour_end_url'):
-                end_url = self.md.Meta['pompadour_end_url'][0]
+            if self.md.Meta.has_key(u'pompadour_end_url'):
+                end_url = self.md.Meta[u'pompadour_end_url'][0]
 
-            if self.md.Meta.has_key('pompadour_html_class'):
-                html_class = self.md.Meta['pompadour_html_class'][0]
+            if self.md.Meta.has_key(u'pompadour_html_class'):
+                html_class = self.md.Meta[u'pompadour_html_class'][0]
 
         return base_url, end_url, html_class
 

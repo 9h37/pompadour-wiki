@@ -6,7 +6,7 @@ class Wiki(models.Model):
     description = models.TextField()
     gitdir = models.CharField(max_length=512)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 class Document(models.Model):
@@ -14,6 +14,6 @@ class Document(models.Model):
     wikipath = models.CharField(max_length=512)
     is_image = models.BooleanField()
 
-    def __str__(self):
+    def __unicode__(self):
         return self.path
 

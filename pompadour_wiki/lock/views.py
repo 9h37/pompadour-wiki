@@ -10,15 +10,15 @@ import simplejson as json
 def detail(request, lock_id):
     lock = get_object_or_404(Lock, pk=lock_id)
 
-    data = {'lock': {
-        'id': lock.id,
-        'path': lock.path,
-        'user': lock.user.username
+    data = {u'lock': {
+        u'id': lock.id,
+        u'path': lock.path,
+        u'user': lock.user.username
     }}
 
-    if request.method == 'DELETE' and request.user == lock.user:
+    if request.method == u'DELETE' and request.user == lock.user:
         lock.delete()
 
-        data['lock']['deleted'] = True
+        data[u'lock'][u'deleted'] = True
 
     return HttpResponse(json.dumps(data))

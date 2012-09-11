@@ -5,27 +5,27 @@ from wiki.models import Wiki
 
 def _infos():
     infos = {
-        'title': 'Pompadour Wiki'
+        u'title': u'Pompadour Wiki'
     }
 
     return infos
 
 def _navbar():
-    urls = {'navbar': [
-        ('Home', reverse('home')),
+    urls = {u'navbar': [
+        (u'Home', reverse(u'home')),
     ]}
 
     for w in Wiki.objects.all():
-        entry = (w.name, '/wiki/{0}/'.format(w.slug))
+        entry = (w.name, u'/wiki/{0}/'.format(w.slug))
 
-        urls['navbar'].append(entry)
+        urls[u'navbar'].append(entry)
 
     return urls
 
 def pompadour(request):
-    data = {'pompadour': {}}
+    data = {u'pompadour': {}}
 
-    data['pompadour'].update(_infos())
-    data['pompadour'].update(_navbar())
+    data[u'pompadour'].update(_infos())
+    data[u'pompadour'].update(_navbar())
 
     return data

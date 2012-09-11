@@ -10,9 +10,9 @@ class GoogleBackend:
         if openid_response.status != SUCCESS:
             return None
 
-        google_email = openid_response.getSigned('http://openid.net/srv/ax/1.0', 'value.email')
-        google_firstname = openid_response.getSigned('http://openid.net/srv/ax/1.0', 'value.firstname')
-        google_lastname = openid_response.getSigned('http://openid.net/srv/ax/1.0', 'value.lastname')
+        google_email = openid_response.getSigned(u'http://openid.net/srv/ax/1.0', u'value.email')
+        google_firstname = openid_response.getSigned(u'http://openid.net/srv/ax/1.0', u'value.firstname')
+        google_lastname = openid_response.getSigned(u'http://openid.net/srv/ax/1.0', u'value.lastname')
 
         user, created = User.objects.get_or_create(email=google_email)
         user.username = google_email

@@ -19,13 +19,13 @@ from lock.models import Lock
 def _git_path(request, wiki):
     """ Get the path inside the git repository """
 
-    path = request.path.split('/{0}/'.format(wiki))[1]
+    path = request.path.split(u'/{0}/'.format(wiki))[1]
 
     # Remove slashes
-    while path and path[0] == '/':
+    while path and path[0] == u'/':
         path = path[1:]
 
-    while path and path[-1] == '/':
+    while path and path[-1] == u'/':
         path = path[:-1]
 
     return path
@@ -83,39 +83,39 @@ def edit(request, wiki):
 
     page_name = path
 
-    if request.method == 'POST':
+    if request.method == u'POST':
         form = EditPageForm(request.POST)
 
         if form.is_valid():
-            r.set_content(form.cleaned_data['path'], form.cleaned_data['content'])
+            r.set_content(form.cleaned_data[u'path'], form.cleaned_data[u'content'])
 
-            return redirect('{0}/{1}'.format(reverse('page', args=[wiki]), path))
+            return redirect(u'{0}/{1}'.format(reverse(u'page', args=[wiki]), path))
     else:
         if r.exists(path) and not r.is_dir(path):
             content, page_name = r.get_content(path)
-            form = EditPageForm({'path': path, 'content': content})
+            form = EditPageForm({u'path': path, u'content': content})
         else:
             form = EditPageForm()
 
-    docs = Document.objects.filter(wikipath='{0}/{1}'.format(wiki, path))
+    docs = Document.objects.filter(wikipath=u'{0}/{1}'.format(wiki, path))
 
     data = {
-        'menu_url': reverse('tree', args=[wiki]),
-        'page_name': 'Edit: {0}'.format(page_name),
-        'page_locked': page_locked,
-        'attachements': {
-            'images': docs.filter(is_image=True),
-            'documents': docs.filter(is_image=False)
+        u'menu_url': reverse(u'tree', args=[wiki]),
+        u'page_name': u'Edit: {0}'.format(page_name),
+        u'page_locked': page_locked,
+        u'attachements': {
+            u'images': docs.filter(is_image=True),
+            u'documents': docs.filter(is_image=False)
         },
-        'edit_path': path,
-        'wiki': w,
-        'form': form,
+        u'edit_path': path,
+        u'wiki': w,
+        u'form': form,
     }
 
     if page_locked:
-        data['lock'] = lock
+        data[u'lock'] = lock
 
-    return render_to_response('edit.html', data, context_instance=RequestContext(request))
+    return render_to_response(u'edit.html', data, context_instance=RequestContext(request))
 
 
 @login_required
@@ -126,46 +126,46 @@ def page(request, wiki):
 
     # If the page doesn't exist, redirect user to an edit page
     if not r.exists(path):
-        return redirect('{0}/{1}'.format(reverse('edit', args=[wiki]), path))
+        return redirect(u'{0}/{1}'.format(reverse(u'edit', args=[wiki]), path))
 
     if r.is_dir(path):
         pages, name = r.get_tree(path)
         data = {
-            'menu_url': reverse('tree', args=[wiki]),
-            'pages': pages,
-            'page_name': name,
-            'wiki': w,
+            u'menu_url': reverse(u'tree', args=[wiki]),
+            u'pages': pages,
+            u'page_name': name,
+            u'wiki': w,
         }
 
-        return render_to_response('pages.html', data, context_instance=RequestContext(request))
+        return render_to_response(u'pages.html', data, context_instance=RequestContext(request))
 
     else:
         extension = pompadourlinks.makeExtension([
-            ('base_url', '/wiki/{0}/'.format(wiki)),
-            ('end_url', '.md'),
+            (u'base_url', u'/wiki/{0}/'.format(wiki)),
+            (u'end_url', u'.md'),
         ])
 
         md = markdown.Markdown(
-            extensions = ['meta', 'codehilite', 'toc', extension],
+            extensions = [u'meta', u'codehilite', u'toc', extension],
             safe_mode = True
         )
         content, name = r.get_content(path)
 
-        page_content = md.convert(content.decode('utf-8'))
+        page_content = md.convert(content.decode(u'utf-8'))
 
-        docs = Document.objects.filter(wikipath='{0}/{1}'.format(wiki, path))
+        docs = Document.objects.filter(wikipath=u'{0}/{1}'.format(wiki, path))
 
         data = {
-            'menu_url': reverse('tree', args=[wiki]),
-            'page_content': page_content,
-            'page_meta': md.Meta,
-            'page_name': name,
-            'attachements': {
-                'images': docs.filter(is_image=True),
-                'documents': docs.filter(is_image=False)
+            u'menu_url': reverse(u'tree', args=[wiki]),
+            u'page_content': page_content,
+            u'page_meta': md.Meta,
+            u'page_name': name,
+            u'attachements': {
+                u'images': docs.filter(is_image=True),
+                u'documents': docs.filter(is_image=False)
             },
-            'edit_url': '/edit/'.join(request.path.split('/wiki/')),
-            'wiki': w,
+            u'edit_url': u'/edit/'.join(request.path.split(u'/wiki/')),
+            u'wiki': w,
         }
 
-        return render_to_response('page.html', data, context_instance=RequestContext(request))
+        return render_to_response(u'page.html', data, context_instance=RequestContext(request))

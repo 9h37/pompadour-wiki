@@ -67,11 +67,11 @@ class Repository(object):
         self.repo.odb.store(istream)
 
         # Create the corresponding blob object
-        blob = Blob(self.repo, istream.binsha, 0100644, path)
+        blob = Blob(self.repo, istream.binsha, 0100644, path.encode('utf-8'))
 
         # Commit
         self.repo.index.add([IndexEntry.from_blob(blob)])
-        self.repo.index.commit('Update Wiki: {0}'.format(path))
+        self.repo.index.commit('Update Wiki: {0}'.format(path.encode('utf-8')))
 
         # Update internal informations
         self._parse()
@@ -89,77 +89,77 @@ class Repository(object):
             if tree.path == path:
                 ret = []
 
-                ret = ret + [{'path': b.path, 'type': 'file'} for b in tree.blobs]
-                ret = ret + [{'path': t.path, 'type': 'tree'} for t in tree.trees]
+                ret = ret + [{u'path': b.path, u'type': u'file'} for b in tree.blobs]
+                ret = ret + [{u'path': t.path, u'type': u'tree'} for t in tree.trees]
 
                 return ret, tree.name
 
     def get_json_tree(self):
         """ Get full tree of repository as json """
 
-        json = {'node': {
-            'name': '/',
-            'path': '/',
-            'type': 'tree',
-            'children': []
+        json = {u'node': {
+            u'name': u'/',
+            u'path': u'/',
+            u'type': u'tree',
+            u'children': []
         }}
 
         # Get all paths from the repository
         for e in self.repo_tree.traverse():
-            spath = e.path.split('/')
+            spath = e.path.split(u'/')
 
-            node = json['node']
+            node = json[u'node']
 
             # Build tree before inserting node
             for d in spath[:-1]:
-                new_node = {'node': {
-                    'name': d,
-                    'path': e.path,
-                    'type': 'tree',
-                    'children': []
+                new_node = {u'node': {
+                    u'name': d,
+                    u'path': e.path,
+                    u'type': u'tree',
+                    u'children': []
                 }}
 
                 # Search if the node is already in the tree
-                for n in node['children']:
-                    if d == n['node']['name']:
+                for n in node[u'children']:
+                    if d == n[u'node'][u'name']:
                         new_node = n
                         break
                 else: # if not, just add it
-                    node['children'].append(new_node)
+                    node[u'children'].append(new_node)
 
                 # Up level
-                node = new_node['node']
+                node = new_node[u'node']
 
             if type(e) is Tree:
-                new_node = {'node': {
-                    'name': e.name,
-                    'path': e.path,
-                    'type': 'tree',
-                    'children': []
+                new_node = {u'node': {
+                    u'name': e.name,
+                    u'path': e.path,
+                    u'type': u'tree',
+                    u'children': []
                 }}
 
-                node['children'].append(new_node)
+                node[u'children'].append(new_node)
             else:
-                new_node = {'node': {
-                    'name': e.name,
-                    'path': e.path,
-                    'type': 'file'
+                new_node = {u'node': {
+                    u'name': e.name,
+                    u'path': e.path,
+                    u'type': u'file'
                 }}
 
-                node['children'].append(new_node)
+                node[u'children'].append(new_node)
 
         return simplejson.dumps(json)
 
     def get_history(self):
-        diffs = {'diffs': []}
+        diffs = {u'diffs': []}
 
         c = self.repo.head.commit
 
         while c.parents:
-            diff = {'msg': str(c.message), 'date': str(c.authored_date), 'author': str(c.author)}
-            diff['diff'] = self.repo.git.diff(c.parents[0].hexsha, c.hexsha)
+            diff = {u'msg': unicode(c.message), u'date': unicode(c.authored_date), u'author': unicode(c.author)}
+            diff[u'diff'] = self.repo.git.diff(c.parents[0].hexsha, c.hexsha)
 
-            diffs['diffs'].append(diff)
+            diffs[u'diffs'].append(diff)
 
             c = c.parents[0]
 

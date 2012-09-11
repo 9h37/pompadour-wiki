@@ -14,30 +14,30 @@ def home(request):
     wikis = Wiki.objects.all()
 
     data = {
-        'wikis': [wikis[x:x+3] for x in xrange(0, len(wikis), 3)]
+        u'wikis': [wikis[x:x+3] for x in xrange(0, len(wikis), 3)]
     }
 
-    return render_to_response('home.html', data, context_instance=RequestContext(request))
+    return render_to_response(u'home.html', data, context_instance=RequestContext(request))
 
 def _postdoc(request, is_image):
-    docpath = '{0}/{1}'.format(
+    docpath = u'{0}/{1}'.format(
             settings.MEDIA_ROOT,
-            is_image and 'images' or 'documents'
+            is_image and u'images' or u'documents'
     )
 
     if not os.path.exists(docpath):
         os.mkdir(docpath)
 
-    f = request.FILES['file']
+    f = request.FILES[u'file']
 
-    fd = open('{0}/{1}'.format(docpath, f.name), 'wb+')
+    fd = open(u'{0}/{1}'.format(docpath, f.name), u'wb+')
     for chunk in f.chunks():
         fd.write(chunk)
     fd.close()
 
-    url = '{0}/{1}/{2}'.format(
+    url = u'{0}/{1}/{2}'.format(
             settings.MEDIA_URL,
-            is_image and 'images' or 'documents',
+            is_image and u'images' or u'documents',
             f.name
     )
 
@@ -49,17 +49,17 @@ def _postdoc(request, is_image):
         doc.is_image = is_image
         doc.path = url
 
-        doc.wikipath = request.POST['page']
+        doc.wikipath = request.POST[u'page']
         doc.save()
 
     return HttpResponse(doc.path)
 
 @login_required
 def post_img(request):
-    if request.method == 'POST':
+    if request.method == u'POST':
         return _postdoc(request, True)
 
 @login_required
 def post_doc(request):
-    if request.method == 'POST':
+    if request.method == u'POST':
         return _postdoc(request, False)
