@@ -8,6 +8,7 @@ from django.utils.timezone import utc
 
 import datetime
 import markdown
+from pompadour_wiki import pompadourlinks
 
 from wiki.forms import EditPageForm
 from wiki.models import Wiki, Document
@@ -139,23 +140,19 @@ def page(request, wiki):
         return render_to_response('pages.html', data, context_instance=RequestContext(request))
 
     else:
+        extension = pompadourlinks.makeExtension([
+            ('base_url', '/wiki/{0}/'.format(wiki)),
+            ('end_url', '.md'),
+        ])
+
         md = markdown.Markdown(
-            extensions = ['meta', 'wikilinks', 'codehilite', 'toc'],
-            extension_configs = {
-                'wikilinks': [
-                    ('base_url', '/wiki/{0}/'.format(wiki)),
-                    ('end_url', '.md'),
-                ],
-                'codehilite': [
-                ],
-            },
+            extensions = ['meta', 'codehilite', 'toc', extension],
             safe_mode = True
         )
         content, name = r.get_content(path)
 
         page_content = md.convert(content.decode('utf-8'))
 
-        print path
         docs = Document.objects.filter(wikipath='{0}/{1}'.format(wiki, path))
 
         data = {

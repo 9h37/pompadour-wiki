@@ -22,7 +22,7 @@ def home(request):
 def _postdoc(request, is_image):
     docpath = '{0}/{1}'.format(
             settings.MEDIA_ROOT,
-            'images' and is_image or 'documents'
+            is_image and 'images' or 'documents'
     )
 
     if not os.path.exists(docpath):
@@ -37,7 +37,7 @@ def _postdoc(request, is_image):
 
     url = '{0}/{1}/{2}'.format(
             settings.MEDIA_URL,
-            'images' and is_image or 'documents',
+            is_image and 'images' or 'documents',
             f.name
     )
 
