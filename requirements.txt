@@ -1,5 +1,6 @@
 Django>=1.4
 django-openid-auth>=0.4
+ez-setup==0.9
 django-markup-tags>=0.1
 django-markitup>=1.0
 Markdown>=2.2
