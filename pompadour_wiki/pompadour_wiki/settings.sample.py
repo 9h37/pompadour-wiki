@@ -43,7 +43,8 @@ USE_L10N = True
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
 
-ROOT = ''
+import os
+ROOT = os.getcwd()
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -112,9 +113,12 @@ LOGOUT_URL = '/logout/'
 
 OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
 
-WIKI_GIT_DIR = ''          # Directory where wiki git repository is located
-GOOGLE_ACCEPT_ALL = False  # Accept all domains ?
-GOOGLE_APP = 'example.com' # Google App domain
+from pompadour_wiki.views import login_failed
+OPENID_RENDER_FAILURE = login_failed
+
+WIKI_GIT_DIR = ROOT + '/wikis/' # Directory where wiki git repository is located
+GOOGLE_ACCEPT_ALL = False       # Accept all domains ?
+GOOGLE_APP = 'example.com'      # Google App domain
 
 ROOT_URLCONF = 'pompadour_wiki.urls'
 

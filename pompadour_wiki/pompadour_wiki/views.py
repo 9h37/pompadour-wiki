@@ -16,6 +16,13 @@ import simplejson as json
 
 import os
 
+def login_failed(request, message, status=None, template_name=None, exception=None):
+    data = {
+        'error': message
+    }
+
+    return render_to_response(u'home.html', data, context_instance=RequestContext(request))
+
 @login_required
 def home(request):
     data = {}
