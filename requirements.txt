@@ -6,3 +6,5 @@ django-markitup>=1.0
 Markdown>=2.2
 pygments>=1.4
 gitpython>=0.3
+python-openid>=2.2.5
+simplejson>=2.6.2

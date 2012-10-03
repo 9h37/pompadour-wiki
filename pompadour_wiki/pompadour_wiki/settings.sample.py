@@ -58,7 +58,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ROOT + '/media/static/'
+STATIC_ROOT = ROOT + '/static/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -70,7 +70,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 
-    STATIC_ROOT,
+    ROOT + '/media/static/',
 )
 
 # List of finder classes that know how to find static files in
@@ -107,7 +107,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/done'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout/'
 
 OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
