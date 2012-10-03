@@ -12,11 +12,11 @@ def _infos():
 
 def _navbar():
     urls = {u'navbar': [
-        (u'Home', reverse(u'home')),
+        'separator'
     ]}
 
     for w in Wiki.objects.all():
-        entry = (w.name, u'/wiki/{0}/'.format(w.slug))
+        entry = (w.name, u'/wiki/{0}/'.format(w.slug), None)
 
         urls[u'navbar'].append(entry)
 

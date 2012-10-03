@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.template.defaultfilters import slugify
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.conf import settings
@@ -21,7 +22,7 @@ def home(request):
 
     if request.method == 'POST':
         wiki_name = request.POST['add-wiki-name']
-        wiki_slug = request.POST['add-wiki-slug']
+        wiki_slug = slugify(wiki_name)
         wiki_desc = request.POST['add-wiki-desc']
         wiki_gitd = '/'.join([settings.WIKI_GIT_DIR, wiki_slug])
 
@@ -29,7 +30,8 @@ def home(request):
         try:
             w = Wiki.objects.get(slug=wiki_slug)
 
-            data['error'] = 'Can\'t add wiki, the slug \'{0}\' already exists'.format(wiki_slug)
+            data['error'] = 'Can\'t add wiki, another wiki with the same name ({0}) already exists'.format(wiki_name)
+
         except Wiki.DoesNotExist:
             # Create repository
             repo = Repo.init(wiki_gitd)

@@ -22,6 +22,10 @@
                 padding: 9px 0;
             }
 
+            .row-fluid {
+                margin-bottom: 15px;
+            }
+
             .wiki {
                 padding: 5px;
                 background-color: #F5F5F5;
@@ -59,18 +63,18 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="#">{{ pompadour.title }}</a>
+                    <a class="brand" href="/"><i class="icon-home icon-white"></i></a>
 
                     <div class="nav-collapse collapse">
                         <!-- Account informations visible on desktop only -->
                         <p class="navbar-text pull-right visible-desktop">
                             {% if user.is_authenticated %}
-                                Logged in as <a href="mailto:{{ user.email }}" class="navbar-link">{{ user.first_name }} {{ user.last_name }}</a> |
+                                Logged in as <a href="mailto:{{ user.email }}" class="navbar-link"><b>{{ user.first_name }} {{ user.last_name }}</b></a> |
                                 <a href="#modal-add-wiki" data-toggle="modal"><i class="icon-plus-sign icon-white"></i> Add a wiki</a> |
                                 {% if user.is_staff %}
-                                    <a href="/admin/">Administration</a> |
+                                    <a href="/admin/"><i class="icon-wrench icon-white"></i> Administration</a> |
                                 {% endif %}
-                                <a href="/logout/">Logout</a>
+                                <a href="/logout/"><i class="icon-off icon-white"></i> Logout</a>
                             {% else %}
                                 <a href="/login/" class="navbar-link">Login</a>
                             {% endif %}
@@ -79,20 +83,35 @@
                         <ul class="nav">
                             <!-- Account information hidden on desktop -->
                             {% if user.is_authenticated %}
-                                <li class="hidden-desktop"><a href="mailto:{{ user.email }}">{{ user.first_name }} {{ user.last_name }}</a></li>
+                                <li class="hidden-desktop"><a href="mailto:{{ user.email }}"><i class="icon-user icon-white"></i> {{ user.first_name }} {{ user.last_name }}</a></li>
+                                <li class="hidden-desktop"><a href="#modal-add-wiki" data-toggle="modal"><i class="icon-plus-sign icon-white"></i> Add a wiki</a></li>
                                 {% if user.is_staff %}
-                                    <li class="hidden-desktop"><a href="/admin/">Administration</a></li>
+                                    <li class="hidden-desktop"><a href="/admin/"><i class="icon-wrench icon-white"></i> Administration</a></li>
                                 {% endif %}
-                                <li class="hidden-desktop"><a href="/logout/">Logout</a></li>
+                                <li class="hidden-desktop"><a href="/logout/"><i class="icon-off icon-white"></i> Logout</a></li>
                             {% else %}
                                 <li class="hidden-desktop"><a href="/login/">Login</a></li>
                             {% endif %}
 
                             {% for url in pompadour.navbar %}
-                                {% if request.path == url.1 %}
-                                    <li class="active"><a href="{{ url.1 }}">{{ url.0 }}</a></li>
+                                {% if url == 'separator' %}
+                                    <li class="divider-vertical"></li>
                                 {% else %}
-                                    <li><a href="{{ url.1 }}">{{ url.0 }}</a></li>
+                                    {% if request.path == url.1 %}
+                                        <li class="active">
+                                    {% else %}
+                                        <li>
+                                    {% endif %}
+
+                                    <a href="{{ url.1 }}">
+                                        {% if url.2 %}
+                                            <i class="{{ url.2 }} icon-white"></i>
+                                        {% endif %}
+
+                                        {{ url.0 }}
+                                    </a>
+
+                                    </li>
                                 {% endif %}
                             {% endfor %}
 
@@ -115,14 +134,6 @@
 
                             <div class="controls">
                                 <input type="text" name="add-wiki-name" id="add-wiki-name" />
-                            </div>
-                        </div>
-
-                        <div class="control-group">
-                            <label for "add-wiki-slug" class="control-label">Wiki slug</label>
-
-                            <div class="controls">
-                                <input type="text" name="add-wiki-slug" id="add-wiki-slug" />
                             </div>
                         </div>
 
@@ -150,10 +161,9 @@
 
         <div class="container-fluid">
             {% if error %}
-                <div class="row-fluid">
-                    <div class="span12">
-                        <div class="alert alert-error">{{ error }}</div>
-                    </div>
+                <div class="alert alert-error">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ error }}
                 </div>
             {% endif %}
             {% block content %}
