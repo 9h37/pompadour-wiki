@@ -66,6 +66,7 @@
                         <p class="navbar-text pull-right visible-desktop">
                             {% if user.is_authenticated %}
                                 Logged in as <a href="mailto:{{ user.email }}" class="navbar-link">{{ user.first_name }} {{ user.last_name }}</a> |
+                                <a href="#modal-add-wiki" data-toggle="modal"><i class="icon-plus-sign icon-white"></i> Add a wiki</a> |
                                 {% if user.is_staff %}
                                     <a href="/admin/">Administration</a> |
                                 {% endif %}
@@ -101,7 +102,60 @@
             </div>
         </div>
 
+        <div id="modal-add-wiki" class="modal hide fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Add a wiki</h3>
+                <div class="modal-body">
+                    <form action="{% url 'home' %}" method="post" class="form-horizontal">
+                        {% csrf_token %}
+
+                        <div class="control-group">
+                            <label for="add-wiki-name" class="control-label">Wiki name</label>
+
+                            <div class="controls">
+                                <input type="text" name="add-wiki-name" id="add-wiki-name" />
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for "add-wiki-slug" class="control-label">Wiki slug</label>
+
+                            <div class="controls">
+                                <input type="text" name="add-wiki-slug" id="add-wiki-slug" />
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="add-wiki-desc" class="control-label">Description</label>
+
+                            <div class="controls">
+                                <textarea name="add-wiki-desc" id="add-wiki-desc"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="controls">
+                                <button class="btn btn-primary" type="submit">Add wiki</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                </div>
+            </div>
+        </div>
+
         <div class="container-fluid">
+            {% if error %}
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div class="alert alert-error">{{ error }}</div>
+                    </div>
+                </div>
+            {% endif %}
             {% block content %}
             {% endblock %}
         </div>

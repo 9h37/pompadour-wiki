@@ -112,8 +112,9 @@ LOGOUT_URL = '/logout/'
 
 OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
 
-GOOGLE_ACCEPT_ALL = False # Accept all domains ?
-GOOGLE_APP = '9h37.fr'    # Google App domain
+WIKI_GIT_DIR = ''          # Directory where wiki git repository is located
+GOOGLE_ACCEPT_ALL = False  # Accept all domains ?
+GOOGLE_APP = 'example.com' # Google App domain
 
 ROOT_URLCONF = 'pompadour_wiki.urls'
 
