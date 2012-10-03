@@ -145,6 +145,15 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
 )
 
+MARKITUP_FILTER = ('markdown.markdown', {
+    'safe_mode': False,
+    'extensions': ['meta', 'codehilite', 'toc'],
+})
+
+MARKITUP_PREVIEW_FILTER = MARKITUP_FILTER
+MARKITUP_SET = 'markitup/sets/markdown'
+MARKITUP_AUTO_PREVIEW = True
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
