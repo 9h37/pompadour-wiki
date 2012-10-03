@@ -3,13 +3,14 @@ WikiLinks extension modified to support [[Namespace/Link]]
 
 """
 
+from django.template.defaultfilters import slugify
 import markdown
 import re
 
 def build_url(label, base, end):
     """ Build a url from the label, a base, and an end. """
 
-    clean_label = re.sub(r'([ ]+_)|(_[ ]+)|([ ]+)', '_', label)
+    clean_label = '-'.join(label.split(' '))
     return u'{0}{1}{2}'.format(base, clean_label, end)
 
 class PompadourLinkExtension(markdown.Extension):

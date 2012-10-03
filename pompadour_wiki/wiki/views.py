@@ -87,7 +87,8 @@ def edit(request, wiki):
         form = EditPageForm(request.POST)
 
         if form.is_valid():
-            r.set_content(form.cleaned_data[u'path'], form.cleaned_data[u'content'])
+            new_path = '-'.join(form.cleaned_data[u'path'].split(' '))
+            r.set_content(new_path, form.cleaned_data[u'content'])
 
             return redirect(u'{0}/{1}'.format(reverse(u'page', args=[wiki]), path))
     else:
@@ -126,7 +127,7 @@ def page(request, wiki):
 
     # If the page doesn't exist, redirect user to an edit page
     if not r.exists(path):
-        return redirect(u'{0}/{1}'.format(reverse(u'edit', args=[wiki]), path))
+        return redirect(u'{0}/{1}'.format(reverse('edit', args=[wiki]), path))
 
     if r.is_dir(path):
         pages, name = r.get_tree(path)
