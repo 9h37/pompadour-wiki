@@ -8,6 +8,8 @@ from django.utils.timezone import utc
 
 import datetime
 import markdown
+import os
+
 from pompadour_wiki import pompadourlinks
 
 from wiki.forms import EditPageForm
@@ -88,7 +90,14 @@ def edit(request, wiki):
 
         if form.is_valid():
             new_path = '-'.join(form.cleaned_data[u'path'].split(' '))
+
+            os.environ['GIT_AUTHOR_NAME'] = '{0} {1}'.format(request.user.first_name, request.user.last_name)
+            os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
+
             r.set_content(new_path, form.cleaned_data[u'content'])
+
+            del(os.environ['GIT_AUTHOR_NAME'])
+            del(os.environ['GIT_AUTHOR_EMAIL'])
 
             return redirect(u'{0}/{1}'.format(reverse(u'page', args=[wiki]), path))
     else:
