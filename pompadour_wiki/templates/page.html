@@ -25,6 +25,24 @@
                     <li><i class="icon-file"></i> <a href="{{ doc.path }}">{{ doc.path }}</a></li>
                 {% endfor %}
             </ul>
+
+            <hr/>
+
+            <div class="accordion" id="remove-page">
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#remove-page" href="#delete-button">
+                            <i class="icon-remove-circle"></i> Delete this page
+                        </a>
+                    </div>
+
+                    <div class="accordion-body collapse" id="delete-button">
+                        <div class="accordion-inner">
+                            <a class="btn btn-danger" href="#modal-del-page" data-toggle="modal">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

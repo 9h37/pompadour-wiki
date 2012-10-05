@@ -82,6 +82,15 @@ class Repository(object):
             if blob.path == path:
                 return blob.data_stream.read(), blob.name
 
+    def rm_content(self, path):
+        """ Remove file located at `path` """
+
+        self.repo.index.remove([path])
+        self.repo.index.commit('Update Wiki: {0} deleted'.format(path.encode('utf-8')))
+
+        # Updata internal informations
+        self._parse()
+
     def get_tree(self, path):
         """ Get list of files contained in `path` """
 

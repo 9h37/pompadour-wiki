@@ -49,6 +49,29 @@ def diff(request, wiki):
     return HttpResponse(r.get_history())
 
 @login_required
+def remove(request, wiki):
+    """ Remove a page """
+
+    w = get_object_or_404(Wiki, slug=wiki)
+    r = Repository(w.gitdir)
+    path = _git_path(request, wiki)
+
+    # Remove page
+
+    os.environ['GIT_AUTHOR_NAME'] = '{0} {1}'.format(request.user.first_name, request.user.last_name)
+    os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
+
+    r.rm_content(path)
+
+    del(os.environ['GIT_AUTHOR_NAME'])
+    del(os.environ['GIT_AUTHOR_EMAIL'])
+
+    # Remove attachements
+    Document.objects.filter(wikipath=u'{0}/{1}'.format(wiki, path)).delete()
+
+    return redirect(reverse(u'page', args=[wiki]))
+
+@login_required
 def edit(request, wiki):
     """ Edit a page """
 
@@ -175,6 +198,7 @@ def page(request, wiki):
                 u'documents': docs.filter(is_image=False)
             },
             u'edit_url': u'/edit/'.join(request.path.split(u'/wiki/')),
+            u'delete_url': u'/del/'.join(request.path.split(u'/wiki/')),
             u'wiki': w,
         }
 
