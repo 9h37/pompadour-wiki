@@ -128,6 +128,8 @@ from pompadour_wiki.views import login_failed
 OPENID_RENDER_FAILURE = login_failed
 
 WIKI_GIT_DIR = ROOT + '/wikis/' # Directory where wiki git repository is located
+WIKI_INDEX = "Home.md"          # Index page, set it to None if you want to see all folder's pages
+
 GOOGLE_ACCEPT_ALL = False       # Accept all domains ?
 GOOGLE_APP = 'example.com'      # Google App domain
 

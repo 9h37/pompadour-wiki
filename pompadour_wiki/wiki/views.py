@@ -3,8 +3,8 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
-
 from django.utils.timezone import utc
+from django.conf import settings
 
 import datetime
 import markdown
@@ -162,6 +162,9 @@ def page(request, wiki):
         return redirect(u'{0}/{1}'.format(reverse('edit', args=[wiki]), path))
 
     if r.is_dir(path):
+        if settings.WIKI_INDEX:
+            return redirect(u'{0}/{1}/{2}'.format(reverse('page', args=[wiki]), path, settings.WIKI_INDEX))
+
         pages, name = r.get_tree(path)
         data = {
             u'menu_url': reverse(u'tree', args=[wiki]),
