@@ -1,6 +1,7 @@
 {% load staticfiles %}
 {% load url from future %}
 {% load markup %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html>
@@ -69,14 +70,14 @@
                         <!-- Account informations visible on desktop only -->
                         <p class="navbar-text pull-right visible-desktop">
                             {% if user.is_authenticated %}
-                                Logged in as <a href="mailto:{{ user.email }}" class="navbar-link"><b>{{ user.first_name }} {{ user.last_name }}</b></a> |
-                                <a href="#modal-add-wiki" data-toggle="modal"><i class="icon-plus-sign icon-white"></i> Add a wiki</a> |
+                                {% trans "Logged in as" %} <a href="mailto:{{ user.email }}" class="navbar-link"><b>{{ user.first_name }} {{ user.last_name }}</b></a> |
+                                <a href="#modal-add-wiki" data-toggle="modal"><i class="icon-plus-sign icon-white"></i> {% trans "Add a wiki" %}</a> |
                                 {% if user.is_staff %}
-                                    <a href="/admin/"><i class="icon-wrench icon-white"></i> Administration</a> |
+                                    <a href="/admin/"><i class="icon-wrench icon-white"></i> {% trans "Administration" %}</a> |
                                 {% endif %}
-                                <a href="/logout/"><i class="icon-off icon-white"></i> Logout</a>
+                                <a href="/logout/"><i class="icon-off icon-white"></i> {% trans "Logout" %}</a>
                             {% else %}
-                                <a href="/login/" class="navbar-link">Login</a>
+                                <a href="/login/" class="navbar-link">{% trans "Login" %}</a>
                             {% endif %}
                         </p>
 
@@ -84,13 +85,13 @@
                             <!-- Account information hidden on desktop -->
                             {% if user.is_authenticated %}
                                 <li class="hidden-desktop"><a href="mailto:{{ user.email }}"><i class="icon-user icon-white"></i> {{ user.first_name }} {{ user.last_name }}</a></li>
-                                <li class="hidden-desktop"><a href="#modal-add-wiki" data-toggle="modal"><i class="icon-plus-sign icon-white"></i> Add a wiki</a></li>
+                                <li class="hidden-desktop"><a href="#modal-add-wiki" data-toggle="modal"><i class="icon-plus-sign icon-white"></i>{% trans "Add a wiki" %}</a></li>
                                 {% if user.is_staff %}
-                                    <li class="hidden-desktop"><a href="/admin/"><i class="icon-wrench icon-white"></i> Administration</a></li>
+                                    <li class="hidden-desktop"><a href="/admin/"><i class="icon-wrench icon-white"></i> {% trans "Administration" %}</a></li>
                                 {% endif %}
-                                <li class="hidden-desktop"><a href="/logout/"><i class="icon-off icon-white"></i> Logout</a></li>
+                                <li class="hidden-desktop"><a href="/logout/"><i class="icon-off icon-white"></i> {% trans "Logout" %}</a></li>
                             {% else %}
-                                <li class="hidden-desktop"><a href="/login/">Login</a></li>
+                                <li class="hidden-desktop"><a href="/login/">{% trans "Login" %}</a></li>
                             {% endif %}
 
                             {% for url in pompadour.navbar %}
@@ -124,7 +125,7 @@
         <div id="modal-add-wiki" class="modal hide fade">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>Add a wiki</h3>
+                <h3>{% trans "Add a wiki" %}</h3>
             </div>
 
             <div class="modal-body">
@@ -132,7 +133,7 @@
                     {% csrf_token %}
 
                     <div class="control-group">
-                        <label for="add-wiki-name" class="control-label">Wiki name</label>
+                        <label for="add-wiki-name" class="control-label">{% trans "Wiki name" %}</label>
 
                         <div class="controls">
                             <input type="text" name="add-wiki-name" id="add-wiki-name" />
@@ -140,7 +141,7 @@
                     </div>
 
                     <div class="control-group">
-                        <label for="add-wiki-desc" class="control-label">Description</label>
+                        <label for="add-wiki-desc" class="control-label">{% trans "Description" %}</label>
 
                         <div class="controls">
                             <textarea name="add-wiki-desc" id="add-wiki-desc"></textarea>
@@ -149,14 +150,14 @@
 
                     <div class="control-group">
                         <div class="controls">
-                            <button class="btn btn-primary" type="submit">Add wiki</button>
+                            <button class="btn btn-primary" type="submit">{% trans "Add wiki" %}</button>
                         </div>
                     </div>
                 </form>
             </div>
 
             <div class="modal-footer">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
             </div>
         </div>
 
@@ -164,18 +165,19 @@
             <div id="modal-del-page" class="modal hide fade">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h3>Are you sure ?</h3>
+                    <h3>{% trans "Are you sure ?" %}</h3>
                 </div>
 
                 <div class="modal-body">
-                    <p>This action <b>CANNOT</b> be undone. This will delete the page
-                    <b>{% filter title %}{% firstof page_meta.title.0 page_name wiki.name %}{% endfilter %}</b>
-                    permanently.</p>
+                    <p>
+                        {% trans "This action <b>CANNOT</b> be undone. This will permanently delete the page" %}
+                        <b>{% filter title %}{% firstof page_meta.title.0 page_name wiki.name %}{% endfilter %}</b>.
+                    </p>
                 </div>
 
                 <div class="modal-footer">
-                    <a class="btn btn-danger" href="{{ delete_url }}">Yes I'm sure</a>
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                    <a class="btn btn-danger" href="{{ delete_url }}">{% trans "Yes I'm sure" %}</a>
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
                 </div>
             </div>
         {% endif %}

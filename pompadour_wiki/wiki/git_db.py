@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext
+
 from StringIO import StringIO
 from gitdb import IStream
 from git import *
@@ -71,7 +73,7 @@ class Repository(object):
 
         # Commit
         self.repo.index.add([IndexEntry.from_blob(blob)])
-        self.repo.index.commit('Update Wiki: {0}'.format(path.encode('utf-8')))
+        self.repo.index.commit(ugettext('Update Wiki: {0}').format(path.encode('utf-8')).encode('utf-8'))
 
         # Update internal informations
         self._parse()
@@ -86,7 +88,7 @@ class Repository(object):
         """ Remove file located at `path` """
 
         self.repo.index.remove([path])
-        self.repo.index.commit('Update Wiki: {0} deleted'.format(path.encode('utf-8')))
+        self.repo.index.commit(ugettext('Update Wiki: {0} deleted').format(path.encode('utf-8')).encode('utf-8'))
 
         # Updata internal informations
         self._parse()

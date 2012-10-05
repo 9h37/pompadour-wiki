@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load markitup_tags %}
 {% load url from future %}
+{% load i18n %}
 
 {% block markitup %}
     {% markitup_media "no-jquery" %}
@@ -43,14 +44,14 @@
             {
                 var a = $(this).parent().find('a');
 
-                $('#id_content').atCaret('insert', '![Image Not Found](' + a.text() + ' "title")');
+                $('#id_content').atCaret('insert', '![{% trans "Image Not Found" %}](' + a.text() + ' "{% trans "title" %}")');
             });
 
             $('.icon-file').click(function()
             {
                 var a = $(this).parent().find('a');
 
-                $('#id_content').atCaret('insert', '[document](' + a.text() + ' "title")');
+                $('#id_content').atCaret('insert', '[{% trans "document" %}](' + a.text() + ' "{% trans "title" %}")');
             });
         });
     </script>
@@ -68,7 +69,7 @@
 
         <div class="span4">
             <ul class="list unstyled">
-                <li><i class="icon-plus-sign"></i> add an image</li>
+                <li><i class="icon-plus-sign"></i> {% trans "add an image" %}</li>
 
                 <li>
                     <form id="up-img" class="file-upload" method="post" action="{% url 'post-image' %}" enctype="multipart/form-data">
@@ -81,7 +82,7 @@
             </ul>
 
             <ul class="list unstyled">
-                <li><i class="icon-plus-sign"></i> add a document</li>
+                <li><i class="icon-plus-sign"></i> {% trans "add a document" %}</li>
 
                 <li>
                     <form id="up-doc" class="file-upload" method="post" action="{% url 'post-document' %}" enctype="multipart/form-data">
@@ -96,7 +97,7 @@
             <hr/>
 
             <ul id="imgs" class="list unstyled">
-                <li>Attached images</li>
+                <li>{% trans "Attached images" %}</li>
 
                 {% for img in attachements.images %}
                     <li><i class="icon-film"></i> <a href="{{ img.path }}">{{ img.path }}</a></li>
@@ -106,7 +107,7 @@
             <hr/>
 
             <ul id="docs" class="list unstyled">
-                <li>Attached documents</li>
+                <li>{% trans "Attached documents" %}</li>
 
                 {% for doc in attachements.documents %}
                     <li><i class="icon-file"></i> <a href="{{ doc.path }}">{{ doc.path }}</a></li>

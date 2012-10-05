@@ -1,0 +1,163 @@
+# English translation of Pompadour wiki
+# Copyright (C) 2012 David Delassus <david.jose.delassus@gmail.com>
+# This file is distributed under the same license as the Pompadour wiki package.
+# David Delassus <david.jose.delassus@gmail.com> 2012
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-10-05 16:15+0200\n"
+"PO-Revision-Date: 2012-10-05 11:36+0200\n"
+"Last-Translator: David Delassus <david.jose.delassus@gmail.com>\n"
+"Language-Team: en-US\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: pompadour_wiki/settings.py:40
+msgid "French"
+msgstr ""
+
+#: pompadour_wiki/settings.py:41
+msgid "English"
+msgstr ""
+
+#: pompadour_wiki/views.py:41
+msgid "Can't add wiki, another wiki with the same name ({0}) already exists"
+msgstr ""
+
+#: pompadour_wiki/views.py:63
+msgid "Initialize {0}"
+msgstr ""
+
+#: templates/base.html:73
+msgid "Logged in as"
+msgstr ""
+
+#: templates/base.html:74 templates/base.html.py:88 templates/base.html:128
+msgid "Add a wiki"
+msgstr ""
+
+#: templates/base.html:76 templates/base.html.py:90
+msgid "Administration"
+msgstr ""
+
+#: templates/base.html:78 templates/base.html.py:92
+msgid "Logout"
+msgstr ""
+
+#: templates/base.html:80 templates/base.html.py:94
+msgid "Login"
+msgstr ""
+
+#: templates/base.html:136
+msgid "Wiki name"
+msgstr ""
+
+#: templates/base.html:144
+msgid "Description"
+msgstr ""
+
+#: templates/base.html:153
+msgid "Add wiki"
+msgstr ""
+
+#: templates/base.html:160 templates/base.html.py:180 templates/wiki.html:109
+msgid "Close"
+msgstr ""
+
+#: templates/base.html:168
+msgid "Are you sure ?"
+msgstr ""
+
+#: templates/base.html:173
+msgid ""
+"This action <b>CANNOT</b> be undone. This will permanently delete the page"
+msgstr ""
+
+#: templates/base.html:179
+msgid "Yes I'm sure"
+msgstr ""
+
+#: templates/edit.html:47
+msgid "Image Not Found"
+msgstr ""
+
+#: templates/edit.html:47 templates/edit.html.py:54
+msgid "title"
+msgstr ""
+
+#: templates/edit.html:54
+msgid "document"
+msgstr ""
+
+#: templates/edit.html:72
+msgid "add an image"
+msgstr ""
+
+#: templates/edit.html:85
+msgid "add a document"
+msgstr ""
+
+#: templates/edit.html:100 templates/page.html:13
+msgid "Attached images"
+msgstr ""
+
+#: templates/edit.html:110 templates/page.html:23
+msgid "Attached documents"
+msgstr ""
+
+#: templates/page.html:36
+msgid "Delete this page"
+msgstr ""
+
+#: templates/page.html:42
+msgid "Delete"
+msgstr ""
+
+#: templates/wiki.html:63
+msgid "Add page"
+msgstr ""
+
+#: templates/wiki.html:73
+msgid "history"
+msgstr ""
+
+#: templates/wiki.html:76
+msgid "edit"
+msgstr ""
+
+#: templates/wiki.html:86
+msgid "Warning"
+msgstr ""
+
+#: templates/wiki.html:86
+msgid "This page is being edited by"
+msgstr ""
+
+#: templates/wiki.html:99
+#, python-format
+msgid "%(wiki.name|title)s history"
+msgstr ""
+
+#: templates/wiki.html:103
+msgid "Message"
+msgstr ""
+
+#: templates/wiki.html:103
+msgid "Author"
+msgstr ""
+
+#: templates/wiki.html:103
+msgid "Date"
+msgstr ""
+
+#: wiki/git_db.py:76
+msgid "Update Wiki: {0}"
+msgstr ""
+
+#: wiki/git_db.py:91
+msgid "Update Wiki: {0} deleted"
+msgstr ""

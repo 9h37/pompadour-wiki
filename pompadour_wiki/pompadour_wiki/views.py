@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.conf import settings
+from django.utils.translation import ugettext
 
 from StringIO import StringIO
 from gitdb import IStream
@@ -37,7 +38,7 @@ def home(request):
         try:
             w = Wiki.objects.get(slug=wiki_slug)
 
-            data['error'] = 'Can\'t add wiki, another wiki with the same name ({0}) already exists'.format(wiki_name)
+            data['error'] = ugettext('Can\'t add wiki, another wiki with the same name ({0}) already exists').format(wiki_name)
 
         except Wiki.DoesNotExist:
             os.environ['GIT_AUTHOR_NAME'] = '{0} {1}'.format(request.user.first_name, request.user.last_name)
@@ -59,7 +60,7 @@ def home(request):
             blob = Blob(repo, istream.binsha, 0100644, 'Home.md')
 
             repo.index.add([IndexEntry.from_blob(blob)])
-            repo.index.commit('Initialize {0}'.format(wiki_name))
+            repo.index.commit(ugettext('Initialize {0}').format(wiki_name).encode('utf-8'))
 
             del(os.environ['GIT_AUTHOR_NAME'])
             del(os.environ['GIT_AUTHOR_EMAIL'])

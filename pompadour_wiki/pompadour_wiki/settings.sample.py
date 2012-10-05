@@ -3,6 +3,9 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+import os
+ROOT = os.getcwd()
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
@@ -12,7 +15,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'pompadour.db',                 # Or path to database file if using sqlite3.
+        'NAME': ROOT + '/pompadour.db',         # Or path to database file if using sqlite3.
         'USER': '',                             # Not used with sqlite3.
         'PASSWORD': '',                         # Not used with sqlite3.
         'HOST': '',                             # Set to empty string for localhost. Not used with sqlite3.
@@ -28,7 +31,16 @@ TIME_ZONE = 'Europe/Paris'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'fr-fr'
+LANGUAGE_CODE = 'fr'
+
+LANGUAGES = (
+    ('fr', 'French'),
+    ('en', 'English'),
+)
+
+LOCALE_PATHS = (
+    ROOT + '/locale',
+)
 
 SITE_ID = 1
 
@@ -42,9 +54,6 @@ USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
-
-import os
-ROOT = os.getcwd()
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -93,8 +102,10 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
+    'pompadour_wiki.middleware.UnsetAcceptLanguageHeaderMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -168,6 +179,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'django_openid_auth',
     'markitup',
+    'sessions',
     'wiki',
     'lock',
 )

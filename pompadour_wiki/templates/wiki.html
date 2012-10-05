@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% block wiki_script %}
     <script src="{% static 'wiki-tree.js' %}"></script>
@@ -59,7 +60,7 @@
             <div class="span3">
                 <div class="well sidebar-nav sidebar-nav-fixed">
                     <ul class="nav nav-list">
-                        <li><a href="/edit/{{ wiki.slug }}"><i class="icon-plus-sign"></i> Add page</a></li>
+                        <li><a href="/edit/{{ wiki.slug }}"><i class="icon-plus-sign"></i> {% trans "Add page" %}</a></li>
                         <li class="divider"></li>
                         <li class="nav-header"><a href="/wiki/{{ wiki.slug }}"><i class="icon-folder-open"></i> {{ wiki.name|title }}</a></li>
                         <ul class="nav nav-list" id="wiki-menu"></ul>
@@ -69,10 +70,10 @@
 
             <div class="span9">
                     <div class="pull-right">
-                        <p><a href="#" id="open-diff"><i class="icon-list-alt"></i> history</a></p>
+                        <p><a href="#" id="open-diff"><i class="icon-list-alt"></i> {% trans "history" %}</a></p>
 
                         {% if edit_url %}
-                            <p><a href="{{ edit_url }}"><i class="icon-edit"></i> edit</a></p>
+                            <p><a href="{{ edit_url }}"><i class="icon-edit"></i> {% trans "edit" %}</a></p>
                         {% endif %}
                     </div>
 
@@ -82,8 +83,8 @@
 
                 {% if page_locked %}
                     <div class="alert">
-                        <span class="label label-warning">Warning</span> This page is being edited
-                        by <a href="mailto:{{ lock.user.email }}">{{ lock.user.first_name }} {{ lock.user.last_name }}</a>.
+                        <span class="label label-warning">{% trans "Warning" %}</span> {% trans "This page is being edited by" %}
+                        <a href="mailto:{{ lock.user.email }}">{{ lock.user.first_name }} {{ lock.user.last_name }}</a>.
                     </div>
 
                     <hr/>
@@ -95,17 +96,17 @@
                 </div>
 
                 <div id="wiki_diff" class="hide">
-                    <h3>{{ wiki.name|title }} history</h3>
+                    <h3>{%blocktrans %}{{ wiki.name|title }} history{% endblocktrans %}</h3>
 
                     <table class="table table-stripped table-bordered table-hover">
                         <thead>
-                            <tr><th>Message</th><th>Author</th><th>Date</th></tr>
+                            <tr><th>{% trans "Message" %}</th><th>{% trans "Author" %}</th><th>{% trans "Date" %}</th></tr>
                         </thead>
                         <tbody id="history">
                         </tbody>
                     </table>
 
-                    <p style="text-align: right;"><a href="#" class="btn" id="close-diff">Close</a></p>
+                    <p style="text-align: right;"><a href="#" class="btn" id="close-diff">{% trans "Close" %}</a></p>
 
                     <hr/>
 
