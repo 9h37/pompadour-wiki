@@ -117,7 +117,9 @@ def edit(request, wiki):
             os.environ['GIT_AUTHOR_NAME'] = '{0} {1}'.format(request.user.first_name, request.user.last_name)
             os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
 
-            r.set_content(new_path, form.cleaned_data[u'content'])
+            commit = form.cleaned_data[u'comment'] or None
+
+            r.set_content(new_path, form.cleaned_data[u'content'], commit_msg=commit)
 
             del(os.environ['GIT_AUTHOR_NAME'])
             del(os.environ['GIT_AUTHOR_EMAIL'])
@@ -126,7 +128,7 @@ def edit(request, wiki):
     else:
         if r.exists(path) and not r.is_dir(path):
             content, page_name = r.get_content(path)
-            form = EditPageForm({u'path': path, u'content': content})
+            form = EditPageForm({u'path': path, u'content': content, u'comment': None})
         else:
             form = EditPageForm()
 

@@ -54,7 +54,7 @@ class Repository(object):
 
         return False
 
-    def set_content(self, path, content):
+    def set_content(self, path, content, commit_msg=None):
         """ Add new content in `path` """
 
         # Create the stream
@@ -73,7 +73,11 @@ class Repository(object):
 
         # Commit
         self.repo.index.add([IndexEntry.from_blob(blob)])
-        self.repo.index.commit(ugettext('Update Wiki: {0}').format(path.encode('utf-8')).encode('utf-8'))
+
+        if not commit_msg:
+            commit_msg = ugettext('Update Wiki: {0}').format(path.encode('utf-8')).encode('utf-8')
+
+        self.repo.index.commit(commit_msg)
 
         # Update internal informations
         self._parse()
