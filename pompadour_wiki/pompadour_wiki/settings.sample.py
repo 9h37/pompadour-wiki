@@ -133,6 +133,16 @@ WIKI_INDEX = "Home.md"          # Index page, set it to None if you want to see 
 GOOGLE_ACCEPT_ALL = False       # Accept all domains ?
 GOOGLE_APP = 'example.com'      # Google App domain
 
+EMAIL_HOST = 'mail.example.com'             # Hostname of the SMTP server
+EMAIL_PORT = 25                             # Port of the SMTP server
+EMAIL_HOST_USER = 'noreply@example.com'     # SMTP user
+EMAIL_HOST_PASSWORD = 'password'            # Password for SMTP user
+
+# List of recipient email address
+EMAIL_LIST = (
+    'maillist@example.com',
+)
+
 ROOT_URLCONF = 'pompadour_wiki.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.

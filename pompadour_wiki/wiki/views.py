@@ -3,6 +3,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
+from django.core.mail import send_mail
 from django.utils.timezone import utc
 from django.conf import settings
 
@@ -31,6 +32,16 @@ def _git_path(request, wiki):
         path = path[:-1]
 
     return path
+
+def notify(r, wiki):
+    """ Send email notification after a commit. """
+
+    HEAD = r.repo.head.commit
+    HEADp = r.repo.head.commit.parents[0]
+
+    diff = r.repo.git.diff (HEADp.hexsha, HEAD.hexsha)
+
+    send_mail(u'[wiki/{0}] {1}'.format(wiki, HEAD.message), diff, os.environ['GIT_AUTHOR_EMAIL'], settings.EMAIL_LIST, fail_silently=True)
 
 @login_required
 def tree(request, wiki):
@@ -120,6 +131,9 @@ def edit(request, wiki):
             commit = form.cleaned_data[u'comment'] or None
 
             r.set_content(new_path, form.cleaned_data[u'content'], commit_msg=commit)
+
+            # send email notification
+            notify(r, wiki)
 
             del(os.environ['GIT_AUTHOR_NAME'])
             del(os.environ['GIT_AUTHOR_EMAIL'])
