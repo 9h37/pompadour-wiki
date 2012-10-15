@@ -131,8 +131,13 @@ WIKI_GIT_DIR = ROOT + '/wikis/' # Directory where wiki git repository is located
 WIKI_INDEX = "Home.md"          # Index page, set it to None if you want to see all folder's pages
 
 GOOGLE_ACCEPT_ALL = False       # Accept all domains ?
-GOOGLE_APP = 'example.com'      # Google App domain
 
+# List of accepted Google App domain
+GOOGLE_APP = (
+    'example.com',
+)
+
+EMAIL_NOTIFY = True                         # Notify wikis updates via E-Mail ?
 EMAIL_HOST = 'mail.example.com'             # Hostname of the SMTP server
 EMAIL_PORT = 25                             # Port of the SMTP server
 EMAIL_HOST_USER = 'noreply@example.com'     # SMTP user

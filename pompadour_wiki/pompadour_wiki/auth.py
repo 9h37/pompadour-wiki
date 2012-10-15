@@ -15,8 +15,15 @@ class GoogleBackend:
         google_firstname = openid_response.getSigned(u'http://openid.net/srv/ax/1.0', u'value.firstname')
         google_lastname = openid_response.getSigned(u'http://openid.net/srv/ax/1.0', u'value.lastname')
 
-        if not settings.GOOGLE_ACCEPT_ALL and not google_email.endswith(settings.GOOGLE_APP):
-            return None
+        if not settings.GOOGLE_ACCEPT_ALL:
+            # search domain in the list
+            for domain in settings.GOOGLE_APP:
+                # if found
+                if google_email.endswith(domain):
+                    break
+            else:
+                # if not found
+                return None
 
         user, created = User.objects.get_or_create(email=google_email)
         user.username = google_email

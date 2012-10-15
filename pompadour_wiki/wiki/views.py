@@ -36,6 +36,9 @@ def _git_path(request, wiki):
 def notify(r, wiki):
     """ Send email notification after a commit. """
 
+    if not settings.EMAIL_NOTIFY:
+        return
+
     HEAD = r.repo.head.commit
     HEADp = r.repo.head.commit.parents[0]
 
