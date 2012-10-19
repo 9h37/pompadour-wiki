@@ -41,6 +41,12 @@
             }
 
             .nolabel label { display: none; }
+
+            @media print {
+                .do-not-print {
+                    display: none;
+                }
+            }
         </style>
 
         <link href="{% static 'bootstrap/css/bootstrap-responsive.css' %}" rel="stylesheet" />
@@ -56,7 +62,7 @@
     <body>
 
         <!-- Topbar -->
-        <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar navbar-inverse navbar-fixed-top do-not-print">
             <div class="navbar-inner">
                 <div class="container-fluid">
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
