@@ -58,7 +58,7 @@
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span3">
-                <div class="well sidebar-nav sidebar-nav-fixed">
+                <div class="well sidebar-nav sidebar-nav-fixed do-not-print">
                     <ul class="nav nav-list">
                         <li><a href="/edit/{{ wiki.slug }}"><i class="icon-plus-sign"></i> {% trans "Add page" %}</a></li>
                         <li class="divider"></li>
@@ -69,7 +69,7 @@
             </div>
 
             <div class="span9">
-                    <div class="pull-right">
+                    <div class="pull-right do-not-print">
                         <p><a href="#" id="open-diff"><i class="icon-list-alt"></i> {% trans "history" %}</a></p>
 
                         {% if edit_url %}
