@@ -74,11 +74,14 @@ def remove(request, wiki):
 
     os.environ['GIT_AUTHOR_NAME'] = '{0} {1}'.format(request.user.first_name, request.user.last_name)
     os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
+    os.environ['USERNAME'] = str(request.user.username)
+
 
     r.rm_content(path)
 
     del(os.environ['GIT_AUTHOR_NAME'])
     del(os.environ['GIT_AUTHOR_EMAIL'])
+    del(os.environ['USERNAME'])
 
     # Remove attachements
     Document.objects.filter(wikipath=u'{0}/{1}'.format(wiki, path)).delete()
@@ -130,6 +133,7 @@ def edit(request, wiki):
 
             os.environ['GIT_AUTHOR_NAME'] = '{0} {1}'.format(request.user.first_name, request.user.last_name)
             os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
+            os.environ['USERNAME'] = str(request.user.username)
 
             commit = form.cleaned_data[u'comment'] or None
 
@@ -140,6 +144,7 @@ def edit(request, wiki):
 
             del(os.environ['GIT_AUTHOR_NAME'])
             del(os.environ['GIT_AUTHOR_EMAIL'])
+            del(os.environ['USERNAME'])
 
             return redirect(u'{0}/{1}'.format(reverse(u'page', args=[wiki]), path))
     else:
