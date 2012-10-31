@@ -72,7 +72,7 @@ def remove(request, wiki):
 
     # Remove page
 
-    os.environ['GIT_AUTHOR_NAME'] = '{0} {1}'.format(request.user.first_name, request.user.last_name)
+    os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
     os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
     os.environ['USERNAME'] = str(request.user.username)
 
@@ -131,7 +131,7 @@ def edit(request, wiki):
         if form.is_valid():
             new_path = '-'.join(form.cleaned_data[u'path'].split(' '))
 
-            os.environ['GIT_AUTHOR_NAME'] = '{0} {1}'.format(request.user.first_name, request.user.last_name)
+            os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
             os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
             os.environ['USERNAME'] = str(request.user.username)
 

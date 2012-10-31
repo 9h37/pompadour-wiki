@@ -41,8 +41,9 @@ def home(request):
             data['error'] = ugettext('Can\'t add wiki, another wiki with the same name ({0}) already exists').format(wiki_name)
 
         except Wiki.DoesNotExist:
-            os.environ['GIT_AUTHOR_NAME'] = '{0} {1}'.format(request.user.first_name, request.user.last_name)
+            os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
             os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
+            os.environ['USERNAME'] = str(request.user.username)
 
             # Create repository
             repo = Repo.init(wiki_gitd)
@@ -64,6 +65,7 @@ def home(request):
 
             del(os.environ['GIT_AUTHOR_NAME'])
             del(os.environ['GIT_AUTHOR_EMAIL'])
+            del(os.environ['USERNAME'])
 
             # Create wiki
             wiki = Wiki()
