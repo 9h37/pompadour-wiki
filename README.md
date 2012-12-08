@@ -48,9 +48,9 @@ nice city in the south-west of France.
 
 ## Authors
 
-David Delassus, 9h37 SAS
-Nabil Servais, 9h37 SAS
-Florian Le Goff, 9h37 SAS
+* David Delassus, 9h37 SAS
+* Nabil Servais, 9h37 SAS
+* Florian Le Goff, 9h37 SAS
 
 ## Licence
 
