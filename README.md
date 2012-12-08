@@ -14,27 +14,30 @@ This is a simple yet efficient Wiki engine based on git and Django.
 
 ## Installation
 
-- Clone the repository
+Clone the repository
 
     git clone git@github.com:9h37/pompadour-wiki.git
 
-- Edit the ```pompadour_wiki/pompadour_wiki/settings.sample.py``` settings file to your convenience. Django will take care of creating your tables.
+Edit the ```pompadour_wiki/pompadour_wiki/settings.sample.py``` settings file to your convenience.
 
-- Create a virtualenv for your app
+Django will take care of creating your tables.
+
+
+Create a virtualenv for your app
 
     virtualenv .venv
     source .venv/bin/activate
     pip install -r requirements.txt
 
-- Create your database
+Create your database and super-user
 
     python manage.py syncdb
 
-- Run the app
+Run the app
 
     python manage.py runserver
 
-- PROFIT
+PROFIT !
 
 
 ## Pompadour ?
@@ -45,9 +48,9 @@ nice city in the south-west of France.
 
 ## Authors
 
-David Delassus, 9h37 SAS
-Nabil Servais, 9h37 SAS
-Florian Le Goff, 9h37 SAS
+* David Delassus, 9h37 SAS
+* Nabil Servais, 9h37 SAS
+* Florian Le Goff, 9h37 SAS
 
 ## Licence
 
