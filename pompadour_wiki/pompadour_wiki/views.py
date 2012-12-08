@@ -10,12 +10,10 @@ from StringIO import StringIO
 from gitdb import IStream
 from git import *
 
-from wiki.git_db import Repository
 from wiki.models import Wiki, Document
 
-import simplejson as json
-
 import os
+
 
 def login_failed(request, message, status=None, template_name=None, exception=None):
     data = {
@@ -23,6 +21,7 @@ def login_failed(request, message, status=None, template_name=None, exception=No
     }
 
     return render_to_response(u'home.html', data, context_instance=RequestContext(request))
+
 
 @login_required
 def home(request):
@@ -32,12 +31,11 @@ def home(request):
         wiki_name = request.POST['add-wiki-name']
         wiki_slug = slugify(wiki_name)
         wiki_desc = request.POST['add-wiki-desc']
-        wiki_gitd = '/'.join([settings.WIKI_GIT_DIR, wiki_slug])
+        wiki_gitd = os.path.join(settings.WIKI_GIT_DIR, wiki_slug)
 
         # Check if the slug is present or not
         try:
-            w = Wiki.objects.get(slug=wiki_slug)
-
+            Wiki.objects.get(slug=wiki_slug)
             data['error'] = ugettext('Can\'t add wiki, another wiki with the same name ({0}) already exists').format(wiki_name)
 
         except Wiki.DoesNotExist:
@@ -77,9 +75,10 @@ def home(request):
 
     wikis = Wiki.objects.all()
 
-    data['wikis'] = [wikis[x:x+3] for x in xrange(0, len(wikis), 3)]
+    data['wikis'] = [wikis[x:x + 3] for x in xrange(0, len(wikis), 3)]
 
     return render_to_response(u'home.html', data, context_instance=RequestContext(request))
+
 
 def _postdoc(request, is_image):
     docpath = u'{0}/{1}'.format(
@@ -100,11 +99,11 @@ def _postdoc(request, is_image):
     url = u'{0}/{1}/{2}'.format(
             settings.MEDIA_URL,
             is_image and u'images' or u'documents',
-            f.name
-    )
+            f.name)
 
     try:
         doc = Document.objects.get(path=url)
+
     except Document.DoesNotExist:
         doc = Document()
 
@@ -116,10 +115,12 @@ def _postdoc(request, is_image):
 
     return HttpResponse(doc.path)
 
+
 @login_required
 def post_img(request):
     if request.method == u'POST':
         return _postdoc(request, True)
+
 
 @login_required
 def post_doc(request):

@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Wiki(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50)
@@ -9,6 +10,7 @@ class Wiki(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class Document(models.Model):
     path = models.CharField(max_length=512)
     wikipath = models.CharField(max_length=512)
@@ -16,4 +18,3 @@ class Document(models.Model):
 
     def __unicode__(self):
         return self.path
-

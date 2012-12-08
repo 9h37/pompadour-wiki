@@ -1,17 +1,18 @@
 """
 WikiLinks extension modified to support [[Namespace/Link]]
-
 """
 
-from django.template.defaultfilters import slugify
 import markdown
-import re
+
+POMPADOURLINK_RE = r'\[\[([\w\0-9_ -/]+)\]\]'
+
 
 def build_url(label, base, end):
     """ Build a url from the label, a base, and an end. """
 
     clean_label = '-'.join(label.split(' '))
     return u'{0}{1}{2}'.format(base, clean_label, end)
+
 
 class PompadourLinkExtension(markdown.Extension):
     def __init__(self, configs):
@@ -28,11 +29,10 @@ class PompadourLinkExtension(markdown.Extension):
 
     def extendMarkdown(self, md, md_globals):
         self.md = md
-
-        POMPADOURLINK_RE = r'\[\[([\w\0-9_ -/]+)\]\]'
         pattern = PompadourLinks(POMPADOURLINK_RE, self.getConfigs())
         pattern.md = md
         md.inlinePatterns.add(u'pompadourlink', pattern, "<not_strong")
+
 
 class PompadourLinks(markdown.inlinepatterns.Pattern):
     def __init__(self, pattern, config):
@@ -65,13 +65,13 @@ class PompadourLinks(markdown.inlinepatterns.Pattern):
         html_class = self.config[u'html_class']
 
         if hasattr(self.md, u'Meta'):
-            if self.md.Meta.has_key(u'pompadour_base_url'):
+            if u'pompadour_base_url' in self.md.Meta:
                 base_url = self.md.Meta[u'pompadour_base_url'][0]
 
-            if self.md.Meta.has_key(u'pompadour_end_url'):
+            if u'pompadour_end_url' in self.md.Meta:
                 end_url = self.md.Meta[u'pompadour_end_url'][0]
 
-            if self.md.Meta.has_key(u'pompadour_html_class'):
+            if u'pompadour_html_class' in self.md.Meta.has_key:
                 html_class = self.md.Meta[u'pompadour_html_class'][0]
 
         return base_url, end_url, html_class

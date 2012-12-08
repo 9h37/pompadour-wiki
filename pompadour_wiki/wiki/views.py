@@ -19,6 +19,7 @@ from wiki.git_db import Repository
 
 from lock.models import Lock
 
+
 def _git_path(request, wiki):
     """ Get the path inside the git repository """
 
@@ -33,6 +34,7 @@ def _git_path(request, wiki):
 
     return path
 
+
 def notify(r, wiki):
     """ Send email notification after a commit. """
 
@@ -42,9 +44,10 @@ def notify(r, wiki):
     HEAD = r.repo.head.commit
     HEADp = r.repo.head.commit.parents[0]
 
-    diff = r.repo.git.diff (HEADp.hexsha, HEAD.hexsha)
+    diff = r.repo.git.diff(HEADp.hexsha, HEAD.hexsha)
 
     send_mail(u'[wiki/{0}] {1}'.format(wiki, HEAD.message), diff, os.environ['GIT_AUTHOR_EMAIL'], settings.EMAIL_LIST, fail_silently=True)
+
 
 @login_required
 def tree(request, wiki):
@@ -54,6 +57,7 @@ def tree(request, wiki):
     r = Repository(w.gitdir)
     return HttpResponse(r.get_json_tree())
 
+
 @login_required
 def diff(request, wiki):
     """ Return git diff """
@@ -62,12 +66,13 @@ def diff(request, wiki):
     r = Repository(w.gitdir)
     return HttpResponse(r.get_history())
 
+
 @login_required
 def remove(request, wiki):
     """ Remove a page """
 
     w = get_object_or_404(Wiki, slug=wiki)
-    r = Repository(w.gitdir)
+    repo = Repository(w.gitdir)
     path = _git_path(request, wiki)
 
     # Remove page
@@ -76,8 +81,7 @@ def remove(request, wiki):
     os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
     os.environ['USERNAME'] = str(request.user.username)
 
-
-    r.rm_content(path)
+    repo.rm_content(path)
 
     del(os.environ['GIT_AUTHOR_NAME'])
     del(os.environ['GIT_AUTHOR_EMAIL'])
@@ -87,6 +91,7 @@ def remove(request, wiki):
     Document.objects.filter(wikipath=u'{0}/{1}'.format(wiki, path)).delete()
 
     return redirect(reverse(u'page', args=[wiki]))
+
 
 @login_required
 def edit(request, wiki):
@@ -98,10 +103,10 @@ def edit(request, wiki):
     try:
         lock = Lock.objects.get(path=request.path)
 
-        # Check if the lock exists since more than 30 minutes
+        # Check if the lock exists since more than PAGE_EDIT_LOCK_DURATION seconds
         dt = datetime.datetime.utcnow().replace(tzinfo=utc) - lock.timestamp
 
-        if dt.total_seconds() >= 30*60:
+        if dt.total_seconds() >= settings.PAGE_EDIT_LOCK_DURATION:
             # The lock has expired
             # Reset it to the current user
 
@@ -118,9 +123,8 @@ def edit(request, wiki):
         lock.timestamp = datetime.datetime.utcnow().replace(tzinfo=utc)
         lock.save()
 
-
     w = get_object_or_404(Wiki, slug=wiki)
-    r = Repository(w.gitdir)
+    repo = Repository(w.gitdir)
     path = _git_path(request, wiki)
 
     page_name = path
@@ -131,16 +135,19 @@ def edit(request, wiki):
         if form.is_valid():
             new_path = '-'.join(form.cleaned_data[u'path'].split(' '))
 
+            # dirty hack in order to get the correct $AUTHOR in
+            # our commit message
+
             os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
             os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
             os.environ['USERNAME'] = str(request.user.username)
 
             commit = form.cleaned_data[u'comment'] or None
 
-            r.set_content(new_path, form.cleaned_data[u'content'], commit_msg=commit)
+            repo.set_content(new_path, form.cleaned_data[u'content'], commit_msg=commit)
 
             # send email notification
-            notify(r, wiki)
+            notify(repo, wiki)
 
             del(os.environ['GIT_AUTHOR_NAME'])
             del(os.environ['GIT_AUTHOR_EMAIL'])
@@ -148,8 +155,8 @@ def edit(request, wiki):
 
             return redirect(u'{0}/{1}'.format(reverse(u'page', args=[wiki]), path))
     else:
-        if r.exists(path) and not r.is_dir(path):
-            content, page_name = r.get_content(path)
+        if repo.exists(path) and not repo.is_dir(path):
+            content, page_name = repo.get_content(path)
             form = EditPageForm({u'path': path, u'content': content, u'comment': None})
         else:
             form = EditPageForm()
@@ -206,8 +213,8 @@ def page(request, wiki):
         ])
 
         md = markdown.Markdown(
-            extensions = [u'meta', u'codehilite', u'toc', extension],
-            safe_mode = True
+            extensions=[u'meta', u'codehilite', u'toc', extension],
+            safe_mode=True
         )
         content, name = r.get_content(path)
 

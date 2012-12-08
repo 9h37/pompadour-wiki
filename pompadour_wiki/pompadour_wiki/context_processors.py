@@ -1,7 +1,5 @@
-from django.core.urlresolvers import reverse
-from django.conf import settings
-
 from wiki.models import Wiki
+
 
 def _infos():
     infos = {
@@ -9,6 +7,7 @@ def _infos():
     }
 
     return infos
+
 
 def _navbar():
     urls = {u'navbar': [
@@ -21,6 +20,7 @@ def _navbar():
         urls[u'navbar'].append(entry)
 
     return urls
+
 
 def pompadour(request):
     data = {u'pompadour': {}}

@@ -6,6 +6,7 @@ from git import *
 from git.exc import InvalidGitRepositoryError
 import simplejson
 
+
 class Repository(object):
     """ Repository object """
 
@@ -139,7 +140,7 @@ class Repository(object):
                     if d == n[u'node'][u'name']:
                         new_node = n
                         break
-                else: # if not, just add it
+                else:   # if not, just add it
                     node[u'children'].append(new_node)
 
                 # Up level
