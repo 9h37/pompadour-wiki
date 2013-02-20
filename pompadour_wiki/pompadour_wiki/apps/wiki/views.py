@@ -114,7 +114,8 @@ def edit_page(request, wiki, path):
         form = EditPageForm(request.POST)
 
         if form.is_valid():
-            new_path = u'{0}.md'.format(u'-'.join(form.cleaned_data['path'].split(u' ')))
+            new_path = u'-'.join(form.cleaned_data['path'].split(u' '))
+            new_fullpath = u'{0}.md'.format(new_path)
 
             os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
             os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
@@ -122,13 +123,13 @@ def edit_page(request, wiki, path):
 
             commit = form.cleaned_data['comment'].encode('utf-8') or None
 
-            w.repo.set_content(new_path, form.cleaned_data['content'], commit_msg=commit)
+            w.repo.set_content(new_fullpath, form.cleaned_data['content'], commit_msg=commit)
 
             del(os.environ['GIT_AUTHOR_NAME'])
             del(os.environ['GIT_AUTHOR_EMAIL'])
             del(os.environ['USERNAME'])
 
-            return {'REDIRECT': reverse('view-page', args=[wiki, path])}
+            return {'REDIRECT': reverse('view-page', args=[wiki, new_path])}
 
     # Edit
     else:

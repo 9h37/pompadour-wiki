@@ -6,17 +6,13 @@
 
 {% block content %}
     {% for wrow in wiki.array %}
-        <div class="row-fluid">
+        <div class="row-fluid wiki-box">
             {% for w in wrow %}
-                <div class="span3 wiki-box">
-                    <div class="well">
-                        <h4>
-                            <i class="icon-book"></i>
-                            <a href="{% url view-page w.slug "" %}">{{ w.name|title }}</a>
-                        </h4>
-
-                        <p>{{ w.description|markdown }}</p>
-                    </div>
+                <div class="span3">
+                    <a class="wiki-box-element" href="{% url view-page w.slug "" %}">
+                        <i class="icon-book"></i>
+                        {{ w.name|title }}
+                    </a>
                 </div>
             {% endfor %}
         </div>

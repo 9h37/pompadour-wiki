@@ -4,9 +4,27 @@
 @bordercol: #CCCCCC;
 @headercol: #A83838;
 
+::selection {
+    background-color: #BB3344;
+    color: white;
+}
+
 body {
     padding-bottom: 40px;
     margin-top: 10px;
+}
+
+#main {
+    @media (min-width: 801px) {
+        width: 80%;
+    }
+
+    @media (min-width: 1025px) {
+        width: 55%;
+    }
+
+    margin: auto;
+    display: block;
 }
 
 hr {
@@ -21,18 +39,6 @@ hr {
 
     margin-top: 10px;
     margin-bottom: 10px;
-}
-
-.wiki {
-    @media (min-width: 801px) {
-        #grid .fluid .offset(2);
-        #grid .fluid .span(8);
-    }
-
-    @media (min-width: 1025px) {
-        #grid .fluid .offset(3);
-        #grid .fluid .span(6);
-    }
 }
 
 .wiki-header {
@@ -65,11 +71,16 @@ hr {
 }
 
 .wiki-box {
-    & {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-box-pack: start;
-        -webkit-box-align: start;
+    .wiki-box-element {
+        .well;
+
+        display: block;
+        font-size: 1.2em;
+
+        &:hover {
+            text-decoration: none;
+            background-color: #F3F3F9;
+        }
     }
 }
 
@@ -99,6 +110,18 @@ hr {
             bottom: -14px;
         }
     }
+}
+
+#form-search {
+    input {
+        font-size: 1.7em;
+        height: 2.0em;
+        line-height: 1.7em;
+    }
+}
+
+#form-edit {
+    text-align: center;
 }
 
 #edit-preview {

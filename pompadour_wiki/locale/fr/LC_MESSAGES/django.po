@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pompadour Wiki 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-13 14:50+0100\n"
+"POT-Creation-Date: 2013-02-20 12:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: David Delassus <david.delassus@9h37.fr>\n"
 "Language-Team: \n"
@@ -47,7 +47,7 @@ msgstr "Mettre en ligne"
 #: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:84
 #: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:116
 #: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:148
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:62 templates/base.html:93
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:62 templates/base.html:94
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -120,46 +120,42 @@ msgstr "Mise à jour du Wiki: {0} supprimé"
 msgid "Can't add wiki, another wiki with the same name ({0}) already exists."
 msgstr "Impossible d'ajouter le wiki, un autre du même nom ({0}) existe déjà."
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:16
-msgid "Edit page"
-msgstr "Éditer une page"
-
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:24
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:21
 msgid "Path"
 msgstr "Chemin"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:47
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:43
 msgid "List"
 msgstr "Liste"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:48
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:44
 msgid "Numbered list"
 msgstr "Liste numérotée"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:50
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:46
 msgid "Block Quote"
 msgstr "Citation"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:51
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:47
 msgid "Block Code"
 msgstr "Extrait de code"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:58
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:83
-msgid "Preview"
-msgstr "Prévisualisation"
-
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:62
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:52
 msgid "Attach a document"
 msgstr "Joindre un document"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:73 templates/base.html:89
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:61
+msgid "Update comment"
+msgstr "Commentaire de mise à jour"
+
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:65 templates/base.html:90
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:77
-msgid "Update comment"
-msgstr "Commentaire de mise à jour"
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:68
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:74
+msgid "Preview"
+msgstr "Prévisualisation"
 
 #: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:53
 msgid "Remove page"
@@ -218,46 +214,50 @@ msgstr "Voir"
 msgid "Close"
 msgstr "Fermer"
 
-#: templates/base.html:61 templates/base.html.py:125 templates/base.html:143
+#: templates/base.html:62 templates/base.html.py:130 templates/base.html:153
 msgid "Add a wiki"
 msgstr "Ajouter un Wiki"
 
-#: templates/base.html:69
+#: templates/base.html:70
 msgid "Wiki name"
 msgstr "Nom du Wiki"
 
-#: templates/base.html:77
+#: templates/base.html:78
 msgid "Description"
 msgstr "Description"
 
-#: templates/base.html:123
+#: templates/base.html:126
 msgid "Logged in as"
 msgstr "Authentifié en tant que"
 
-#: templates/base.html:128 templates/base.html.py:146
+#: templates/base.html:132 templates/base.html.py:155
+msgid "Add a page"
+msgstr "Ajouter une page"
+
+#: templates/base.html:136 templates/base.html.py:159
 msgid "Administration"
 msgstr "Administration"
 
-#: templates/base.html:131 templates/base.html.py:149
+#: templates/base.html:139 templates/base.html.py:162
 msgid "Logout"
 msgstr "Se déconnecter"
 
-#: templates/base.html:133 templates/base.html.py:153
+#: templates/base.html:141 templates/base.html.py:166
 msgid "Login"
 msgstr "Se connecter"
 
-#: templates/index.html:28
+#: templates/index.html:24
 msgid "Search"
 msgstr "Recherche"
 
-#: templates/index.html:32
+#: templates/index.html:28
 msgid "Search results"
 msgstr "Résultats de recherche"
 
-#: templates/index.html:40 templates/index.html.py:64
+#: templates/index.html:36 templates/index.html.py:60
 msgid "by"
 msgstr "par"
 
-#: templates/index.html:56
+#: templates/index.html:52
 msgid "Last modifications"
 msgstr "Dernières modifications"

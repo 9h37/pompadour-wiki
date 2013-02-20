@@ -32,6 +32,7 @@ def home(request):
     last_edits.sort(key=lambda x: x['date'], reverse=True)
 
     return {'wiki': {
+        'home': True,
         'array': [wikis[x:x + 4] for x in range(0, len(wikis), 4)],
         'last_edits': last_edits[:10]
     }}
@@ -59,6 +60,7 @@ def search(request):
     last_edits.sort(key=lambda x: x['date'], reverse=True)
 
     data = {'wiki': {
+        'home': True,
         'array': [wikis[x:x + 4] for x in range(0, len(wikis), 4)],
         'last_edits': last_edits[:10]
     }}
