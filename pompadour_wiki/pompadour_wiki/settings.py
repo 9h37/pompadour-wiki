@@ -151,7 +151,7 @@ OPENID_RENDER_FAILURE = login_failed
 WIKI_GIT_DIR = os.path.join(ROOT, 'gitwikis')   # Directory where wiki git repository is located
 WIKI_INDEX = 'Home'                             # Index page, set it to None if you want to see all folder's pages
 
-GOOGLE_ACCEPT_ALL = True                        # Accept all domains ?
+GOOGLE_ACCEPT_ALL = False                       # Accept all domains ?
 # List of accepted Google App domain
 GOOGLE_APP = (
     '9h37.fr',
@@ -162,6 +162,11 @@ EMAIL_HOST = '10.1.250.172'                 # Hostname of the SMTP server
 EMAIL_PORT = 25                             # Port of the SMTP server
 EMAIL_HOST_USER = 'noreply@9h37.fr'         # SMTP user
 EMAIL_HOST_PASSWORD = 'noreply'             # Password for SMTP user
+
+# List of recipient email address
+EMAIL_LIST = (
+    'teamdev@9h37.fr',
+)
 
 MARKITUP_FILTER = ('markdown.markdown', {
     'safe_mode': False,

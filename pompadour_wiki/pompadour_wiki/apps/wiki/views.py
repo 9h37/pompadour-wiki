@@ -22,6 +22,19 @@ import markdown
 import datetime
 import os
 
+def notify(wiki):
+    """ Send email notification after a commit. """
+
+    if not settings.EMAIL_NOTIFY:
+        return
+
+    HEAD = wiki.repo.head.commit
+    HEADp = wiki.repo.head.commit.parents[0]
+
+    diff = wiki.repo.git.diff(HEADp.hexsha, HEAD.hexsha)
+
+    send_mail(u'[wiki/{0}] {1}'.format(wiki, HEAD.message), diff, os.environ['GIT_AUTHOR_EMAIL'], settings.EMAIL_LIST, fail_silently=True)
+
 @login_required
 @render_to('wiki/view.html')
 def view_page(request, wiki, path):
@@ -124,6 +137,8 @@ def edit_page(request, wiki, path):
             commit = form.cleaned_data['comment'].encode('utf-8') or None
 
             w.repo.set_content(new_fullpath, form.cleaned_data['content'], commit_msg=commit)
+
+            notify(w)
 
             del(os.environ['GIT_AUTHOR_NAME'])
             del(os.environ['GIT_AUTHOR_EMAIL'])

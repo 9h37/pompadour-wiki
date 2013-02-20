@@ -85,6 +85,10 @@ class Repository(object):
     def git(self):
         return self.repo.git
 
+    @property
+    def head(self):
+        return self.repo.head
+
     def parse(self):
         """ Parse Tree and Blob objects. """
 

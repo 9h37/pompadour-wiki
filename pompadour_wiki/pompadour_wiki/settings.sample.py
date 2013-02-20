@@ -3,20 +3,23 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+import os
+ROOT = os.getcwd()
+
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    # ('Manager Name', 'Manager Email'),
 )
 
 MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'pompadour.db',                 # Or path to database file if using sqlite3.
-        'USER': '',                             # Not used with sqlite3.
-        'PASSWORD': '',                         # Not used with sqlite3.
-        'HOST': '',                             # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                             # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': '',       # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '',         # Or path to database file if using sqlite3.
+        'USER': '',         # Not used with sqlite3.
+        'PASSWORD': '',     # Not used with sqlite3.
+        'HOST': '',         # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',         # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -28,7 +31,18 @@ TIME_ZONE = 'Europe/Paris'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'fr-fr'
+LANGUAGE_CODE = 'fr'
+
+gettext = lambda s: s
+
+LANGUAGES = (
+    ('fr', gettext('French')),
+    ('en', gettext('English')),
+)
+
+LOCALE_PATHS = (
+    os.path.join(ROOT, 'locale'),
+)
 
 SITE_ID = 1
 
@@ -45,18 +59,18 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(ROOT, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(ROOT, 'static')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -67,6 +81,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(ROOT, 'media', 'static'),
 )
 
 # List of finder classes that know how to find static files in
@@ -75,6 +90,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'dajaxice.finders.DajaxiceFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -84,12 +100,33 @@ SECRET_KEY = 'slalqzzl99ughgcjc8_%as2@8whw5ewy$%+0xf$k7$i+^#^5^o'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+     'django.template.loaders.eggs.Loader',
+)
+
+TEMPLATE_DIRS = (
+    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Always use forward slashes, even on Windows.
+    # Don't forget to use absolute paths, not relative paths.
+    os.path.join(ROOT, 'templates'),
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'pompadour_wiki.apps.utils.context_processors.pompadour',
+    'django.core.context_processors.request',
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    'django.contrib.messages.context_processors.messages',
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
+    'pompadour_wiki.apps.utils.middleware.UnsetAcceptLanguageHeaderMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -97,15 +134,56 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'pompadour_wiki.urls'
+AUTHENTICATION_BACKENDS = (
+    'pompadour_wiki.apps.auth.backends.GoogleBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = '/accounts/logout/'
+
+OPENID_SSO_SERVER_URL = 'https://www.google.com/accounts/o8/id'
+
+from pompadour_wiki.views import login_failed
+OPENID_RENDER_FAILURE = login_failed
+
+WIKI_GIT_DIR = os.path.join(ROOT, 'gitwikis')   # Directory where wiki git repository is located
+WIKI_INDEX = 'Home'                             # Index page, set it to None if you want to see all folder's pages
+
+GOOGLE_ACCEPT_ALL = True                        # Accept all domains ?
+# List of accepted Google App domain
+GOOGLE_APP = (
+    'example.com',
+)
+
+EMAIL_NOTIFY = True                         # Notify wikis updates via E-Mail ?
+EMAIL_HOST = 'smtp.example.com'             # Hostname of the SMTP server
+EMAIL_PORT = 25                             # Port of the SMTP server
+EMAIL_HOST_USER = 'noreply@example.com'     # SMTP user
+EMAIL_HOST_PASSWORD = 'noreply'             # Password for SMTP user
+
+# List of recipient email address
+EMAIL_LIST = (
+    'maillist@example.com',
+)
+
+MARKITUP_FILTER = ('markdown.markdown', {
+    'safe_mode': False,
+    'extensions': ['meta', 'codehilite', 'toc'],
+})
+
+DAJAXICE_MEDIA_PREFIX = "dajaxice"
+DAJAXICE_JSON2_JS_IMPORT = False
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'pompadour_wiki.wsgi.application'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+PROJECT_APPS = (
+    'django_openid_auth',
+    'pompadour_wiki.apps.wiki',
+    'pompadour_wiki.apps.lock',
+    'pompadour_wiki.apps.filemanager',
 )
 
 INSTALLED_APPS = (
@@ -115,11 +193,17 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.markup',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-)
+    'django.contrib.humanize',
+    'dajaxice',
+    'dajax',
+) + PROJECT_APPS
+
+ROOT_URLCONF = 'pompadour_wiki.urls'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
