@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 from django.utils.timezone import utc
 from django.conf import settings
+from django.core.mail import send_mail
 
 from pompadour_wiki.apps.utils.decorators import render_to, redirect_to
 from pompadour_wiki.apps.utils import urljoin
