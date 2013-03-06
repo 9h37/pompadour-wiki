@@ -184,6 +184,7 @@ PROJECT_APPS = (
     'pompadour_wiki.apps.wiki',
     'pompadour_wiki.apps.lock',
     'pompadour_wiki.apps.filemanager',
+    'pompadour_wiki.apps.utils',
 )
 
 INSTALLED_APPS = (
