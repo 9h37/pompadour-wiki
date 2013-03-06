@@ -132,7 +132,7 @@ def edit_page(request, wiki, path):
             new_fullpath = u'{0}.md'.format(new_path)
 
             os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
-            os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
+            os.environ['GIT_AUTHOR_EMAIL'] = request.user.email.encode('utf-8')
             os.environ['USERNAME'] = str(request.user.username)
 
             commit = form.cleaned_data['comment'].encode('utf-8') or None
@@ -174,7 +174,7 @@ def remove_page(request, wiki, path):
 
     # Remove page
     os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
-    os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
+    os.environ['GIT_AUTHOR_EMAIL'] = request.user.email.encode('utf-8')
     os.environ['USERNAME'] = str(request.user.username)
 
     w.repo.rm_content(u'{0}.md'.format(path))

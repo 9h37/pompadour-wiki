@@ -156,7 +156,7 @@ class Repository(object):
             pass
 
         # Write the file
-        with open(abspath, 'w') as f:
+        with open(abspath, 'wb') as f:
             for chunk in ufile.chunks():
                 f.write(chunk)
 
