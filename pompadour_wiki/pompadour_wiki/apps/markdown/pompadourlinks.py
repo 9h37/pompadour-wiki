@@ -29,7 +29,7 @@ class PompadourLinkExtension(markdown.Extension):
     def extendMarkdown(self, md, md_globals):
         self.md = md
 
-        POMPADOURLINK_RE = r'\[\[([\w\0-9_ -/]+)\]\]'
+        POMPADOURLINK_RE = r'\[\[([\w\-_/ ]+)(?:#([\w\-_]+))?(?:\|([\w\-_/ :]+))?\]\]'
         pattern = PompadourLinks(POMPADOURLINK_RE, self.getConfigs())
         pattern.md = md
         md.inlinePatterns.add(u'pompadourlink', pattern, "<not_strong")
@@ -40,20 +40,26 @@ class PompadourLinks(markdown.inlinepatterns.Pattern):
         self.config = config
 
     def handleMatch(self, m):
+        link = m.group(2)
+        anchor = m.group(3)
+        title = m.group(4)
 
-        if m.group(2).strip():
-            base_url, end_url, html_class = self._getMeta()
+        base_url, end_url, html_class = self._getMeta()
 
-            label = m.group(2).strip()
-            url = self.config[u'build_url'](label, base_url, end_url)
-            a = markdown.util.etree.Element('a')
-            a.text = label
-            a.set(u'href', url)
+        label = title or link
+        label = label.strip()
 
-            if html_class:
-                a.set(u'class', html_class)
-        else:
-            a = ''
+        url = self.config[u'build_url'](link, base_url, end_url)
+
+        if anchor:
+            url = u'{0}#{1}'.format(url, anchor)
+
+        a = markdown.util.etree.Element('a')
+        a.text = label
+        a.set(u'href', url)
+
+        if html_class:
+            a.set(u'class', html_class)
 
         return a
 
