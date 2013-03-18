@@ -55,7 +55,7 @@
         {% for edit in wiki.last_edits %}
             <li>
                 <span class="label label-info">{{ edit.wiki.name|title }}</span>
-                {{ edit.message }},
+                <span><a href="{% url view-page edit.wiki.slug edit.page %}">{{ edit.page }}</a></span>,
                 <span class="wiki-info">{{ edit.date|naturaltime }},
                 {% trans "by" %} <a href="mailto:{{ edit.author.email }}">{{ edit.author.name }}</a></span>
             </li>
