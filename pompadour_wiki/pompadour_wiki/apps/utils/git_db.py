@@ -223,7 +223,7 @@ class Repository(object):
                 diff = {
                     'msg': c.message,
                     'date': datetime.fromtimestamp(c.authored_date),
-                    'author': c.author,
+                    'author': c.author.name,
                     'sha': c.hexsha,
                     'path': path,
                 }
@@ -246,7 +246,7 @@ class Repository(object):
             diff = {
                 'msg': c.message,
                 'date': datetime.fromtimestamp(c.authored_date),
-                'author': c.author,
+                'author': c.author.name,
                 'sha': c.hexsha
             }
 
