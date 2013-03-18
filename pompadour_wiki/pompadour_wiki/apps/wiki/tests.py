@@ -109,3 +109,14 @@ class WikiTest(TestCase):
 
         self.assertEqual(response.status_code, 302) # if the page is not found, the wiki redirect the user to an edit page
 
+    def test_06_index(self):
+        response = self.client.get('/')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_07_search(self):
+        response = self.client.post('/search', {
+            'search-query': u'test héhé',
+        })
+
+        self.assertEqual(response.status_code, 200)

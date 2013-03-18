@@ -46,7 +46,10 @@ class LastEdits(object):
                                         'wiki': wiki,
                                         'filename': d.b_blob.path,
                                         'page': os.path.splitext(d.b_blob.path)[0],
-                                        'author': c.author,
+                                        'author': {
+                                            'name': c.author.name,
+                                            'email': c.author.email,
+                                        },
                                         'date': datetime.fromtimestamp(c.authored_date),
                                     })
 
@@ -63,7 +66,10 @@ class LastEdits(object):
                                     'wiki': wiki,
                                     'filename': blob.path,
                                     'page': os.path.splitext(blob.path)[0],
-                                    'author': c.author,
+                                    'author': {
+                                        'name': c.author.name,
+                                        'email': c.author.email,
+                                    },
                                     'date': datetime.fromtimestamp(c.authored_date)
                                 })
 
@@ -137,7 +143,10 @@ def search(request):
                     'wiki': wiki,
                     'file': filename,
                     'matches': matches,
-                    'author': last_commit.author,
+                    'author': {
+                        'name': last_commit.author.name,
+                        'email': last_commit.author.email
+                    },
                     'date': datetime.fromtimestamp(last_commit.authored_date),
                 })
 

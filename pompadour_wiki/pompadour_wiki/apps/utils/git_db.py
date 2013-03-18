@@ -328,7 +328,7 @@ class Repository(object):
 
         # Do the search
         try:
-            out = self.git.grep('-i', '-I', '--cached', pattern)
+            out = self.git.grep('-i', '-I', '--cached', pattern.encode('utf-8'))
 
         except GitCommandError:
             # No results found
