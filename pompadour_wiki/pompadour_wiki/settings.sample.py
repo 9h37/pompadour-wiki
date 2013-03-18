@@ -163,11 +163,6 @@ EMAIL_PORT = 25                             # Port of the SMTP server
 EMAIL_HOST_USER = 'noreply@example.com'     # SMTP user
 EMAIL_HOST_PASSWORD = 'noreply'             # Password for SMTP user
 
-# List of recipient email address
-EMAIL_LIST = (
-    'maillist@example.com',
-)
-
 MARKITUP_FILTER = ('markdown.markdown', {
     'safe_mode': False,
     'extensions': ['meta', 'codehilite', 'toc'],

@@ -19,8 +19,15 @@ class Wiki(models.Model):
 
     def create_repo(self):
         """ Create repository """
-        
+
         Repository.new(self.gitdir)
+
+class WikiNotifier(models.Model):
+    wiki = models.ForeignKey(Wiki)
+    email = models.EmailField(max_length=254)
+
+    def __unicode__(self):
+        return self.email
 
 class Document(models.Model):
     path = models.CharField(max_length=512)

@@ -1,0 +1,8 @@
+David Delassus <david.delassus@9h37.fr>
+18/03/2013 - 17:14
+
+ * ajout du modèle WikiNotifier ;
+ * suppression de settings.EMAIL_LIST ;
+ * nécessite d'ajouter, via le panneau d'admin de Django, les adresses mail à
+   notifier d'une mise à jour du wiki ;
+ * pas de modifications de modèles existants, un syncdb suffira.

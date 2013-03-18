@@ -11,7 +11,7 @@ from django.core.mail import send_mail
 from pompadour_wiki.apps.utils.decorators import render_to, redirect_to
 from pompadour_wiki.apps.utils import urljoin
 
-from pompadour_wiki.apps.wiki.models import Wiki
+from pompadour_wiki.apps.wiki.models import Wiki, WikiNotifier
 from pompadour_wiki.apps.wiki.forms import EditPageForm
 
 from pompadour_wiki.apps.lock.models import Lock
@@ -34,7 +34,10 @@ def notify(wiki):
 
     diff = wiki.repo.git.diff(HEADp.hexsha, HEAD.hexsha)
 
-    send_mail(u'[wiki/{0}] {1}'.format(wiki, HEAD.message), diff, os.environ['GIT_AUTHOR_EMAIL'], settings.EMAIL_LIST, fail_silently=True)
+    notifiers = [notifier.email for notifier in WikiNotifier.objects.filter(wiki=wiki)]
+
+    if notifiers:
+        send_mail(u'[wiki/{0}] {1}'.format(wiki, HEAD.message), diff, os.environ['GIT_AUTHOR_EMAIL'], notifiers, fail_silently=True)
 
 @login_required
 @render_to('wiki/view.html')
