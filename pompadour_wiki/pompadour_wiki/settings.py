@@ -158,7 +158,7 @@ GOOGLE_APP = (
 )
 
 EMAIL_NOTIFY = True                         # Notify wikis updates via E-Mail ?
-EMAIL_HOST = '10.1.250.172'                 # Hostname of the SMTP server
+EMAIL_HOST = 'localhost'                    # Hostname of the SMTP server
 EMAIL_PORT = 25                             # Port of the SMTP server
 EMAIL_HOST_USER = 'noreply@9h37.fr'         # SMTP user
 EMAIL_HOST_PASSWORD = 'noreply'             # Password for SMTP user
