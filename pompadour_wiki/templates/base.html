@@ -129,16 +129,16 @@
                                                 {% if wiki.home %}
                                                     <a href="#modal-add-wiki" data-toggle="modal"><i class="icon-plus-sign"></i> {% trans "Add a wiki" %}</a> |
                                                 {% else %}
-                                                    <a href="{% url edit-page wiki.obj.slug 'new' %}"><i class="icon-plus-sign"></i> {% trans "Add a page" %}</a> |
+                                                    <a href="{% url 'edit-page' wiki.obj.slug 'new' %}"><i class="icon-plus-sign"></i> {% trans "Add a page" %}</a> |
                                                 {% endif %}
 
                                                 {% if user.is_staff %}
                                                     <a href="/admin/"><i class="icon-wrench"></i> {% trans "Administration" %}</a> |
                                                 {% endif %}
 
-                                                <a href="{% url logout %}"><i class="icon-off"></i> {% trans "Logout" %}</a>
+                                                <a href="{% url 'logout' %}"><i class="icon-off"></i> {% trans "Logout" %}</a>
                                             {% else %}
-                                                <a href="{% url openid-login %}">{% trans "Login" %}</a>
+                                                <a href="{% url 'openid-login' %}">{% trans "Login" %}</a>
                                             {% endif %}
                                         </p>
                                     </div> <!-- </desktop> -->
@@ -152,18 +152,18 @@
                                                 {% if wiki.home %}
                                                     <li><a href="#modal-add-wiki" data-toggle="modal"><i class="icon-plus-sign"></i> {% trans "Add a wiki" %}</a></li>
                                                 {% else %}
-                                                    <li><a href="{% url edit-page wiki.obj.slug 'new' %}"><i class="icon-plus-sign"></i> {% trans "Add a page" %}</a></li>
+                                                    <li><a href="{% url 'edit-page' wiki.obj.slug 'new' %}"><i class="icon-plus-sign"></i> {% trans "Add a page" %}</a></li>
                                                 {% endif %}
 
                                                 {% if user.is_staff %}
                                                     <li><a href="/admin/"><i class="icon-wrench"></i> {% trans "Administration" %}</a></li>
                                                 {% endif %}
 
-                                                <li><a href="{% url logout %}"><i class="icon-off"></i> {% trans "Logout" %}</a></li>
+                                                <li><a href="{% url 'logout' %}"><i class="icon-off"></i> {% trans "Logout" %}</a></li>
                                             </ul>
                                         {% else %}
                                             <p class="navbar-text">
-                                                <a href="{% url openid-login %}">{% trans "Login" %}</a>
+                                                <a href="{% url 'openid-login' %}">{% trans "Login" %}</a>
                                             </p>
                                         {% endif %}
                                     </div> <!-- </mobile> -->

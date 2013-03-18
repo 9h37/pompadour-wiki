@@ -9,7 +9,7 @@
         <div class="row-fluid wiki-box">
             {% for w in wrow %}
                 <div class="span3">
-                    <a class="wiki-box-element" href="{% url view-page w.slug "" %}">
+                    <a class="wiki-box-element" href="{% url 'view-page' w.slug "" %}">
                         <i class="icon-book"></i>
                         {{ w.name|title }}
                     </a>
@@ -18,7 +18,7 @@
         </div>
     {% endfor %}
 
-    <form id="form-search" method="post" action="{% url search %}">
+    <form id="form-search" method="post" action="{% url 'search' %}">
         {% csrf_token %}
 
         <input class="input-block-level" type="text" name="search-query" placeholder="{% trans "Search" %}" {% if wiki.search %}value="{{ wiki.search }}"{% endif %}/>
@@ -31,7 +31,7 @@
             {% for result in wiki.search_results %}
                 <li>
                     <span class="label label-info">{{ result.wiki.name|title }}</span>
-                    <b><a href="{% url view-page result.wiki.slug result.file %}">{{ result.file|title }}</a></b>,
+                    <b><a href="{% url 'view-page' result.wiki.slug result.file %}">{{ result.file|title }}</a></b>,
                     <span class="wiki-info">{{ result.date|naturaltime }},
                    {% trans "by" %} <a href="mailto:{{ result.author.email }}">{{ result.author.name }}</a></span>
 
@@ -55,7 +55,7 @@
         {% for edit in wiki.last_edits %}
             <li>
                 <span class="label label-info">{{ edit.wiki.name|title }}</span>
-                <span><a href="{% url view-page edit.wiki.slug edit.page %}">{{ edit.page }}</a></span>,
+                <span><a href="{% url 'view-page' edit.wiki.slug edit.page %}">{{ edit.page }}</a></span>,
                 <span class="wiki-info">{{ edit.date|naturaltime }},
                 {% trans "by" %} <a href="mailto:{{ edit.author.email }}">{{ edit.author.name }}</a></span>
             </li>

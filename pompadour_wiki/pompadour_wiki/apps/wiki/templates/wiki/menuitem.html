@@ -3,7 +3,7 @@
         <input type="checkbox" id="treeview-item-{{ itemid }}" {% if checked %}checked="checked"{% endif %} />
         <label for="treeview-item-{{ itemid }}">
             <i class="icon-folder-close"></i>
-            <a href="{% url view-page wiki.slug node.path %}">
+            <a href="{% url 'view-page' wiki.slug node.path %}">
                 {{ node.name|title }}
             </a>
         </label>
@@ -13,7 +13,7 @@
     </li>
 {% else %}
     <li>
-        <a href="{% url view-page wiki.slug node.path %}">
+        <a href="{% url 'view-page' wiki.slug node.path %}">
             <i class="icon-file"></i>
             {{ node.name|title }}
         </a>

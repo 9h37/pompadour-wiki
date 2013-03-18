@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls.defaults import url, patterns
+from django.conf.urls import url, patterns
 
 from pompadour_wiki.apps.filemanager.views import get_mimetype_image, index, view_document, upload_document
 

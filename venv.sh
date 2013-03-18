@@ -16,6 +16,9 @@ then
      echo "-- Installing dependencies in virtual environment..."
      pip install -r requirements.txt
 else
+     echo "-- Activating virtual environment: $vdir..."
+     source $vdir/bin/activate || exit 1
+     
      echo "-- Updating virtual environment: $vdir..."
      pip install -U -r requirements.txt
 fi

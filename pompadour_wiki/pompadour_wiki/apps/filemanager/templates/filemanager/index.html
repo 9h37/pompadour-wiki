@@ -48,7 +48,7 @@
         </div>
 
         <div class="modal-body">
-            <form id="form-upload" class="form-horizontal" method="post" enctype="multipart/form-data" action="{% url filemanager-upload wiki.obj.slug %}">
+            <form id="form-upload" class="form-horizontal" method="post" enctype="multipart/form-data" action="{% url 'filemanager-upload' wiki.obj.slug %}">
                 {% csrf_token %}
 
                 <div class="control-group">
@@ -156,7 +156,7 @@
         <!-- Wiki page body -->
         <div class="wiki-pane-content">
             <div class="wiki-buttonbox">
-                <a class="btn" href="{% url view-page wiki.obj.slug '' %}">
+                <a class="btn" href="{% url 'view-page' wiki.obj.slug '' %}">
                     <i class="icon-hand-right"></i>
                     {% trans "Go back to wiki" %}
                 </a>
@@ -182,14 +182,14 @@
                 {% for breadcrumb in wiki.breadcrumbs %}
                     {% if forloop.first %}
                         <li>
-                            <a href="{% url filemanager-index wiki.obj.slug "" %}">{{ wiki.obj.name|title }}</a>
+                            <a href="{% url 'filemanager-index' wiki.obj.slug "" %}">{{ wiki.obj.name|title }}</a>
                             <span class="divider">/</span>
                         </li>
                     {% endif %}
 
                     {% if not forloop.last %}
                         <li>
-                            <a href="{% url filemanager-view wiki.obj.slug breadcrumb.1 %}">{{ breadcrumb.0|title }}</a>
+                            <a href="{% url 'filemanager-view' wiki.obj.slug breadcrumb.1 %}">{{ breadcrumb.0|title }}</a>
                             <span class="divider">/</span>
                         </li>
                     {% else %}
@@ -208,8 +208,8 @@
                                 <input class="filemanager-selected-url" type="hidden" value="{{ f.url }}" />
                             </form>
 
-                            <a class="handle-contextual thumbnail" href="{% url filemanager-view wiki.obj.slug f.url %}">
-                                <img src="{% url filemanager-get-type f.mimetype %}" alt="" />
+                            <a class="handle-contextual thumbnail" href="{% url 'filemanager-view' wiki.obj.slug f.url %}">
+                                <img src="{% url 'filemanager-get-type' f.mimetype %}" alt="" />
                             </a>
                         </div>
 

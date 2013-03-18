@@ -1,4 +1,4 @@
-Django>=1.4
+Django>=1.5
 ez-setup>=0.9
 django-openid-auth>=0.4
 django-dajax>=0.9

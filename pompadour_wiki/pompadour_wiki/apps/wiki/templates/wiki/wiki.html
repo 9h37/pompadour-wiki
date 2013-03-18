@@ -83,7 +83,7 @@
                 </p>
             </div>
 
-            <h1><a href="{% url view-page wiki.obj.slug wiki.path %}">{% filter title %}{% firstof wiki.meta.title.0 wiki.name wiki.obj.name %}{% endfilter %}</a></h1>
+            <h1><a href="{% url 'view-page' wiki.obj.slug wiki.path %}">{% filter title %}{% firstof wiki.meta.title.0 wiki.name wiki.obj.name %}{% endfilter %}</a></h1>
         </div>
 
         <div class="wiki-pane-body">
@@ -108,8 +108,8 @@
                         <li>
                             <button class="close" onclick="Dajaxice.pompadour_wiki.apps.filemanager.remove_attach(Dajax.process, {'attachment': {{ doc.id }}});">&times;</button>
 
-                            <a href="{% url filemanager-view wiki.obj.slug doc.file %}">
-                                <img width="16" height="16" src="{% url filemanager-get-type doc.mimetype %}" alt="" />
+                            <a href="{% url 'filemanager-view' wiki.obj.slug doc.file %}">
+                                <img width="16" height="16" src="{% url 'filemanager-get-type' doc.mimetype %}" alt="" />
                                 {{ doc.file }}
                             </a>
                         </li>

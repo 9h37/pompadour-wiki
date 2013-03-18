@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls.defaults import url, patterns
+from django.conf.urls import url, patterns
 
 from pompadour_wiki.apps.wiki.views import view_page, edit_page, remove_page
 
