@@ -1,4 +1,12 @@
 David Delassus <david.delassus@9h37.fr>
+19/03/2013 - 11:46
+
+ * fix erreur dans l'ordre du diff (signification de a_blob et b_blob) ;
+ * fix encoding du nom des fichiers dans LastEdits ;
+ * ajout de la méthode sanitize_path() dans LastEdits pour encoder proprement
+   les noms de fichiers.
+
+David Delassus <david.delassus@9h37.fr>
 18/03/2013 - 17:14
 
  * ajout du modèle WikiNotifier ;
