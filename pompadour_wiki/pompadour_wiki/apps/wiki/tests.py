@@ -6,7 +6,9 @@ from django.test.client import Client
 from django.template.defaultfilters import slugify
 
 from django.contrib.auth.models import User
+
 from pompadour_wiki.apps.wiki.models import Wiki
+from pompadour_wiki.views import LastEdits
 
 class UserTest(User):
     """
@@ -71,18 +73,18 @@ class WikiTest(TestCase):
 
     def test_04_edit_page(self):
         # Verify the page doesn't exist
-        response = self.client.get('/wiki/wiki-test-hehe/Page')
+        response = self.client.get(u'/wiki/wiki-test-hehe/Pagé')
 
         self.assertEqual(response.status_code, 302) # if the page is not found, the wiki redirect the user to an edit page
 
         # Check GET on edit page
-        response = self.client.get('/wiki/wiki-test-hehe/Page/edit')
+        response = self.client.get(u'/wiki/wiki-test-hehe/Pagé/edit')
 
         self.assertEqual(response.status_code, 200)
 
         # Now send data
-        response = self.client.post('/wiki/wiki-test-hehe/Page/edit', {
-            'path': 'Page',
+        response = self.client.post(u'/wiki/wiki-test-hehe/Pagé/edit', {
+            'path': u'Pagé',
             'content': u'Test héhé',
             'comment': u'Commentaire de test héhé',
         })
@@ -90,7 +92,7 @@ class WikiTest(TestCase):
         self.assertEqual(response.status_code, 302) # after an edit, the wiki redirect the user to the page
 
         # And now, check that the new page exists
-        response = self.client.get('/wiki/wiki-test-hehe/Page')
+        response = self.client.get(u'/wiki/wiki-test-hehe/Pagé')
 
         self.assertEqual(response.status_code, 200)
 
@@ -99,22 +101,30 @@ class WikiTest(TestCase):
 
         # Remove page
 
-        response = self.client.get('/wiki/wiki-test-hehe/Page/remove')
+        response = self.client.get(u'/wiki/wiki-test-hehe/Pagé/remove')
 
         self.assertEqual(response.status_code, 302) # On delete, the user is redirected to wiki's home
 
         # Verify the page doesn't exist anymore
         
-        response = self.client.get('/wiki/wiki-test-hehe/Page')
+        response = self.client.get(u'/wiki/wiki-test-hehe/Pagé')
 
         self.assertEqual(response.status_code, 302) # if the page is not found, the wiki redirect the user to an edit page
 
-    def test_06_index(self):
+    def test_06_last_edits(self):
+        self.test_04_edit_page()
+
+        le = LastEdits(Wiki.objects.all())
+
+        self.assertTrue({'filename': u'Pagé.md', 'wiki': self.wiki} in le)
+        self.assertTrue({'filename': u'Home.md', 'wiki': self.wiki} in le)
+
+    def test_07_index(self):
         response = self.client.get('/')
 
         self.assertEqual(response.status_code, 200)
 
-    def test_07_search(self):
+    def test_08_search(self):
         response = self.client.post('/search', {
             'search-query': u'test héhé',
         })

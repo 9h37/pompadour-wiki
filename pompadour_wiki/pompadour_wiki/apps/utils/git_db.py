@@ -182,7 +182,7 @@ class Repository(object):
     def rm_content(self, path):
         """ Remove file located at ``path``. """
 
-        self.repo.index.remove([path])
+        self.repo.index.remove([path.encode('utf-8')])
         self.repo.index.commit(ugettext(u'Update Wiki: {0} deleted'.format(path)).encode('utf-8'))
 
         self.parse()
