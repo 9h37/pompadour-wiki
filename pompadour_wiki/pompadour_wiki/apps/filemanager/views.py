@@ -14,6 +14,7 @@ from pompadour_wiki.apps.wiki.models import Wiki
 
 from pompadour_wiki.apps.filemanager.forms import UploadDocumentForm
 
+import random
 import json
 import os
 
@@ -121,7 +122,7 @@ def upload_document(request, wiki):
     if request.method != 'POST':
         raise Http404
 
-    format = request.POST.pop('format', None)[0]
+    format = request.POST.pop('format', [None])[0]
 
     form = UploadDocumentForm(request.POST, request.FILES)
 
@@ -131,11 +132,29 @@ def upload_document(request, wiki):
 
         doc = request.FILES['doc']
 
+        # Make sure that the filename is unique
+        # NB: if we upload the exact same file, it doesn't matter, only one blob
+        #     will be stored in the repository.
+
+        doc_name = doc.name
+        doc_path = os.path.join(path, doc_name)
+        git_path = os.path.join('__media__', doc_path)
+
+        # if the path exists, add a uniqid to the file
+        while w.repo.exists(git_path):
+            uniqid = str(random.randint(0, 9))
+
+            doc_name = u'{0}{1}'.format(uniqid, doc_name)
+            doc_path = os.path.join(path, doc_name)
+            git_path = os.path.join('__media__', doc_path)
+
+        # Finally put file into the Git repository
+
         os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
         os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
         os.environ['USERNAME'] = str(request.user.username)
 
-        w.repo.put_uploaded_file(os.path.join('__media__', path, doc.name), doc)
+        w.repo.put_uploaded_file(git_path, doc)
 
         del(os.environ['GIT_AUTHOR_NAME'])
         del(os.environ['GIT_AUTHOR_EMAIL'])
@@ -143,7 +162,7 @@ def upload_document(request, wiki):
 
         if format == "json":
             data = {
-                'url': os.path.join(path, doc.name)
+                'url': doc_path
             }
 
             return HttpResponse(json.dumps(data))

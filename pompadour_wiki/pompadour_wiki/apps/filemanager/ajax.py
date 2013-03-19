@@ -56,13 +56,18 @@ def attach_doc(request, wiki=None, files=None, page=None):
         return dajax.json()
 
     for f in files:
-        a = Attachment()
-        a.wiki = w
-        a.page = urljoin(wiki, page)
-        a.file = f
-        a.mimetype = w.repo.get_file_mimetype(os.path.join('__media__', *f.split('/')))
+        page = urljoin(wiki, page)
 
-        a.save()
+        # check if the attachment already exist
+        if not Attachment.objects.filter(wiki=w, page=page, file=f):
+            # the attachment doesn't exist, we can add it
+            a = Attachment()
+            a.wiki = w
+            a.page = page
+            a.file = f
+            a.mimetype = w.repo.get_file_mimetype(os.path.join('__media__', *f.split('/')))
+
+            a.save()
 
     return dajax.json()
 
