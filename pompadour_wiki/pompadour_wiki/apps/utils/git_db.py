@@ -146,8 +146,6 @@ class Repository(object):
         # Re-parse to be sure
         self.parse()
 
-        path = path.encode('utf-8')
-
         # Get absolute path to the file
         abspath = os.path.join(self.gitdir, path)
 
@@ -163,7 +161,7 @@ class Repository(object):
                 f.write(chunk)
 
         # Add it to the repository
-        self.repo.index.add([path])
+        self.repo.index.add([path.encode('utf-8')])
 
         # And commit
         if not commit_msg:

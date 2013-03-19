@@ -157,7 +157,7 @@ def upload_document(request, wiki):
         # Finally put file into the Git repository
 
         os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
-        os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
+        os.environ['GIT_AUTHOR_EMAIL'] = request.user.email.encode('utf-8')
         os.environ['USERNAME'] = str(request.user.username)
 
         w.repo.put_uploaded_file(git_path, doc)
