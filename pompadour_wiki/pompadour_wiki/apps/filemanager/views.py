@@ -14,6 +14,7 @@ from pompadour_wiki.apps.wiki.models import Wiki
 
 from pompadour_wiki.apps.filemanager.forms import UploadDocumentForm
 
+import json
 import os
 
 
@@ -114,12 +115,13 @@ def view_document(request, wiki, path):
     return HttpResponse(content[0], content_type=content[2])
 
 @login_required
-@redirect_to(lambda wiki, path: reverse('filemanager-index', args=[wiki, path]))
 def upload_document(request, wiki):
     w = get_object_or_404(Wiki, slug=wiki)
 
     if request.method != 'POST':
         raise Http404
+
+    format = request.POST.pop('format', None)[0]
 
     form = UploadDocumentForm(request.POST, request.FILES)
 
@@ -139,4 +141,11 @@ def upload_document(request, wiki):
         del(os.environ['GIT_AUTHOR_EMAIL'])
         del(os.environ['USERNAME'])
 
-    return wiki, ''
+        if format == "json":
+            data = {
+                'url': os.path.join(path, doc.name)
+            }
+
+            return HttpResponse(json.dumps(data))
+
+    return redirect(reverse('filemanager-index', args=[wiki, '']))

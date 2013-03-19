@@ -1,4 +1,12 @@
 David Delassus <david.delassus@9h37.fr>
+19/03/2013 - 15:18
+
+ * fix bug utf-8 : le gitdir du Repository en string et non unicode ;
+ * ajout retour JSON à la vue filemanager-upload ;
+ * ajout plugin jQuery ajaxForm (nécessite un collectstatic) ;
+ * ajout modal upload de fichier sur la page d'édition.
+
+David Delassus <david.delassus@9h37.fr>
 19/03/2013 - 12:01
 
  * ajout test unitaire pour le LastEdits ;

@@ -112,7 +112,6 @@ class LastEdits(object):
         return path.decode('utf-8')
 
 
-
     # list API
 
     def __len__(self):

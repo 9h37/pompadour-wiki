@@ -57,7 +57,7 @@ class Repository(object):
         """ Initialize a repository and create the root commit """
 
         # Create repository
-        repo = Repo.init(gitdir)
+        repo = Repo.init(gitdir.encode('utf-8'))
         repo.config_writer().set_value('receive', 'denyCurrentBranch', 'ignore')
 
         # Create hook to automatically update when we receive commits from clients
@@ -77,7 +77,7 @@ class Repository(object):
     def __init__(self, gitdir):
         """ Initialize repository. """
 
-        self.repo = Repo(gitdir)
+        self.repo = Repo(gitdir.encode('utf-8'))
         self.gitdir = gitdir
         self.parse()
 
@@ -146,13 +146,15 @@ class Repository(object):
         # Re-parse to be sure
         self.parse()
 
+        path = path.encode('utf-8')
+
         # Get absolute path to the file
         abspath = os.path.join(self.gitdir, path)
 
         # Make directory for the file
         try:
             os.makedirs(os.path.dirname(abspath))
-        except os.error:
+        except OSError:
             pass
 
         # Write the file
