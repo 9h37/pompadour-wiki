@@ -31,49 +31,87 @@ class LastEdits(object):
                     diffs = c.diff(c.parents[0])
 
                     for d in diffs:
-                        # If a_blob is None, the file was added
-                        # If b_blob is None, the file was deleted
+                        # If a_blob is None, the file was deleted
+                        # If b_blob is None, the file was added
                         # If none of them are None, the file was modified
 
+                        blob = d.a_blob
+
                         # We don't want deleted files
-                        if d.b_blob:
-                            # Exclude __media__ files :
-                            if not d.b_blob.path.startswith('__media__'):
-                                # Check if the file is in the list
-                                if d.b_blob.path not in self:
-                                    # Add the file to the list
-                                    self.edits.append({
-                                        'wiki': wiki,
-                                        'filename': d.b_blob.path,
-                                        'page': os.path.splitext(d.b_blob.path)[0],
-                                        'author': {
-                                            'name': c.author.name,
-                                            'email': c.author.email,
-                                        },
-                                        'date': datetime.fromtimestamp(c.authored_date),
-                                    })
+                        if not blob:
+                            continue
+
+                        blob.path = self.sanitize_path(blob.path)
+
+
+                        # Exclude __media__ files :
+                        if not blob.path.startswith('__media__'):
+                            node = {
+                                'wiki': wiki,
+                                'filename': blob.path,
+                                'page': os.path.splitext(blob.path)[0],
+                                'author': {
+                                    'name': c.author.name,
+                                    'email': c.author.email,
+                                },
+                                'date': datetime.fromtimestamp(c.authored_date),
+                            }
+
+                            # Check if the file is in the list
+                            if node not in self:
+                                # Add the file to the list
+                                self.edits.append(node)
 
                 # No parents, root commit
                 else:
                     # Add each files in the commit tree
                     for blob in c.tree.traverse():
+                        blob.path = self.sanitize_path(blob.path)
+
                         # Except __media__ files
                         if not blob.path.startswith('__media__'):
+                            node = {
+                                'wiki': wiki,
+                                'filename': blob.path,
+                                'page': os.path.splitext(blob.path)[0],
+                                'author': {
+                                    'name': c.author.name,
+                                    'email': c.author.email,
+                                },
+                                'date': datetime.fromtimestamp(c.authored_date),
+                            }
+
                             # Check if the file is in the list
-                            if blob.path not in self:
+                            if node not in self:
                                 # Add to the list
-                                self.edits.append({
-                                    'wiki': wiki,
-                                    'filename': blob.path,
-                                    'page': os.path.splitext(blob.path)[0],
-                                    'author': {
-                                        'name': c.author.name,
-                                        'email': c.author.email,
-                                    },
-                                    'date': datetime.fromtimestamp(c.authored_date)
-                                })
+                                self.edits.append(node)
 
         self.edits.sort(key=lambda x: x['date'], reverse=True)
+
+    def sanitize_path(self, path):
+        """
+        If path[0] is ", then the path contains a UTF-8 string, why ?
+
+        The output of git diff encode UTF-8 filenames :
+
+            diff --git "a/H\303\251h\303\251.md" "b/H\303\251h\303\251.md"
+
+        So, when GitPython read the diff output, it generate this path :
+
+            "H\303\251h\303\251.md"
+
+        And the path string (not unicode), contains :
+
+            '"H\\303\\251h\\303\\251.md"'
+
+        """
+
+        if path[0] == '"':
+            path = path[1:-1].decode('string-escape')
+
+        return path.decode('utf-8')
+
+
 
     # list API
 
@@ -92,11 +130,11 @@ class LastEdits(object):
     def __iter__(self):
         return iter(self.edits)
 
-    def __contains__(self, filename):
+    def __contains__(self, node):
         """ Check if the file is already in the list """
 
         for edit in self.edits:
-            if edit['filename'] == filename:
+            if edit['filename'] == node['filename'] and edit['wiki'] == node['wiki']:
                 return True
 
         return False
