@@ -117,38 +117,6 @@
             </button>
         </div>
     </div>
-
-    <div id="modal-attach-doc" class="modal hide fade">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h3>{% trans "Attach documents to a page" %}</h3>
-        </div>
-
-        <div class="modal-body">
-            <form id="form-attach-doc">
-                <p>{% blocktrans %}The following documents will be attached :{% endblocktrans %}</p>
-
-                <p>
-                    <select class="modal-documents-list">
-                    </select>
-                </p>
-
-                <p><input id="form-attach-page" type="text" placeholder="{% trans "Wiki page" %}" /></p>
-            </form>
-        </div>
-
-        <div class="modal-footer">
-            <button class="btn btn-primary" onclick="Dajaxice.pompadour_wiki.apps.filemanager.attach_doc(Dajax.process, {'wiki': '{{ wiki.obj.slug }}', 'files': selected, 'page': $('#form-attach-page').val()});" data-dismiss="modal">
-                <i class="icon-share icon-white"></i>
-                {% trans "Attach" %}
-            </button>
-
-            <button class="btn" data-dismiss="modal" aria-hidden="true">
-                <i class="icon-remove"></i>
-                {% trans "Cancel" %}
-            </button>
-        </div>
-    </div>
 {% endblock %}
 
 {% block content %}
@@ -172,10 +140,10 @@
                     <i class="icon-trash"></i>
                     {% trans "Remove" %}
                 </a>
-                <a class="btn" href="#modal-attach-doc" data-toggle="modal">
+                <button class="btn" onclick="Dajaxice.pompadour_wiki.apps.filemanager.attach_doc(Dajax.process, {'wiki': '{{ wiki.obj.slug }}', 'files': selected, 'page': '{{ wiki.attach_page }}'});">
                     <i class="icon-share"></i>
-                    {% trans "Attach to a page" %}
-                </a>
+                    {% trans "Attach to" %} {{ wiki.attach_page }}
+                </button>
             </div>
 
             <ul class="breadcrumb pompadour-noprint">

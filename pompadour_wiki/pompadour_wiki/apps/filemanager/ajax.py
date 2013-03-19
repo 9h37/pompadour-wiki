@@ -4,6 +4,7 @@ from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
 
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext
 
 from pompadour_wiki.apps.filemanager.models import Attachment
 from pompadour_wiki.apps.wiki.models import Wiki
@@ -56,18 +57,20 @@ def attach_doc(request, wiki=None, files=None, page=None):
         return dajax.json()
 
     for f in files:
-        page = urljoin(wiki, page)
+        urlpage = urljoin(wiki, page.encode('utf-8'))
 
         # check if the attachment already exist
-        if not Attachment.objects.filter(wiki=w, page=page, file=f):
+        if not Attachment.objects.filter(wiki=w, page=urlpage, file=f):
             # the attachment doesn't exist, we can add it
             a = Attachment()
             a.wiki = w
-            a.page = page
+            a.page = urlpage
             a.file = f
             a.mimetype = w.repo.get_file_mimetype(os.path.join('__media__', *f.split('/')))
 
             a.save()
+
+            dajax.alert(ugettext(u'{0} attached to {1}').format(f, page))
 
     return dajax.json()
 

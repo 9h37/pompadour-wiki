@@ -62,6 +62,11 @@ def get_mimetype_image(request, mimetype):
 def index(request, wiki, path):
     w = get_object_or_404(Wiki, slug=wiki)
 
+    attach_page = request.GET.get('attach', settings.WIKI_INDEX)
+
+    if not w.repo.exists(u'{0}.md'.format(attach_page)):
+        attach_page = settings.WIKI_INDEX
+
     filelist = []
 
     # Get the folder path inside git repository
@@ -86,6 +91,7 @@ def index(request, wiki, path):
     return {'wiki': {
         'files': filelist,
         'obj': w,
+        'attach_page': attach_page,
         'breadcrumbs': breadcrumbify(path),
         'forms': {
             'upload': UploadDocumentForm({})

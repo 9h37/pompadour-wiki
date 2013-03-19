@@ -1,4 +1,13 @@
 David Delassus <david.delassus@9h37.fr>
+19/03/2013 - 16:21
+
+ * ajout de la possibilité de joindre un fichier déjà en ligne ;
+ * dans le filemanager, le bouton "Attach" permet de joindre le document à une
+   unique page (par défaut c'est la page d'index, on peut configurer cette page
+   via le variable GET 'attach').
+
+
+David Delassus <david.delassus@9h37.fr>
 19/03/2013 - 15:51
 
  * ajout d'un identifiant unique au début du nom du document s'il un fichier du

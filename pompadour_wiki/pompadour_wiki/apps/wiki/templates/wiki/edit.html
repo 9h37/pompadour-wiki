@@ -28,6 +28,12 @@
         </div>
 
         <div class="modal-body">
+            <p>
+                <a class="btn" href="{% url 'filemanager-index' wiki.obj.slug '' %}?attach={{ wiki.path }}" target="_blank">
+                    {% trans 'Select already uploaded files' %}
+                </a>
+            </p>
+
             <form id="modal-form-upload" method="post" action="{% url 'filemanager-upload' wiki.obj.slug %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="path" value="/" />
