@@ -5,6 +5,7 @@ WikiLinks extension modified to support [[Namespace/Link]]
 
 from django.template.defaultfilters import slugify
 import markdown
+import string
 import re
 
 def build_url(label, base, end):
@@ -29,7 +30,7 @@ class PompadourLinkExtension(markdown.Extension):
     def extendMarkdown(self, md, md_globals):
         self.md = md
 
-        POMPADOURLINK_RE = r'\[\[([\w\-_/ ]+)(?:#([\w\-_]+))?(?:\|([\w\-_/ :]+))?\]\]'
+        POMPADOURLINK_RE = r'\[\[([\w\0-9-_/ ]+)(?:#([\w\0-9\-_]+))?(?:\|([\w\0-9\-_/ %s]+))?\]\]' % string.punctuation
         pattern = PompadourLinks(POMPADOURLINK_RE, self.getConfigs())
         pattern.md = md
         md.inlinePatterns.add(u'pompadourlink', pattern, "<not_strong")

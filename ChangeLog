@@ -1,6 +1,11 @@
 David Delassus <david.delassus@9h37.fr>
-20/03/2013 - 1
-:
+20/03/2013 - 12:10
+
+ * fix bug avec les liens.
+
+David Delassus <david.delassus@9h37.fr>
+20/03/2013 - 12:05
+
  * ajout d'un système de cache afin d'éviter de récupérer trop souvent les informations
    depuis le dépôt Git ;
  * voir settings.sample.py pour la nouvelle méthode de génération de la SECRET_KEY ;
