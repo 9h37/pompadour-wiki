@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pompadour Wiki 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-20 12:01+0100\n"
+"POT-Creation-Date: 2013-03-20 18:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: David Delassus <david.delassus@9h37.fr>\n"
 "Language-Team: \n"
@@ -18,16 +18,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: pompadour_wiki/settings.py:39
+#: pompadour_wiki/settings.py:39 pompadour_wiki/settings.sample.py:39
 msgid "French"
 msgstr "Français"
 
-#: pompadour_wiki/settings.py:40
+#: pompadour_wiki/settings.py:40 pompadour_wiki/settings.sample.py:40
 msgid "English"
 msgstr "Anglais"
 
+#: pompadour_wiki/apps/filemanager/ajax.py:73
+msgid "{0} attached to {1}"
+msgstr "{0} joint à {1}"
+
 #: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:47
-#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:165
+#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:133
 msgid "Upload a document"
 msgstr "Ajouter un document"
 
@@ -46,8 +50,9 @@ msgstr "Mettre en ligne"
 
 #: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:84
 #: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:116
-#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:148
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:62 templates/base.html:94
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:52
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:62
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:87 templates/base.html:94
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -68,39 +73,28 @@ msgstr "Êtes vous sûr ?"
 msgid "Yes, I'm sure!"
 msgstr "Oui, je suis sûr!"
 
-#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:124
-msgid "Attach documents to a page"
-msgstr "Joindre un document à une page"
-
 #: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:129
-msgid "The following documents will be attached :"
-msgstr "Les documents suivants vont être joint :"
-
-#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:136
-msgid "Wiki page"
-msgstr "Page du Wiki"
-
-#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:143
-msgid "Attach"
-msgstr "Joindre"
-
-#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:161
 msgid "Go back to wiki"
 msgstr "Retourner vers le Wiki"
 
-#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:169
+#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:137
 msgid "Select/Deselect all"
 msgstr "(Dé)sélectionner tout"
 
-#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:173
+#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:141
 msgid "Remove"
 msgstr "Supprimer"
 
-#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:177
-msgid "Attach to a page"
-msgstr "Joindre à une page"
+#: pompadour_wiki/apps/filemanager/templates/filemanager/index.html:145
+#, fuzzy
+msgid "Attach to"
+msgstr "Joindre"
 
-#: pompadour_wiki/apps/utils/git_db.py:47
+#: pompadour_wiki/apps/tagging/templates/tagging/view.html:5
+msgid "Pages tagged as:"
+msgstr "Pages étiquetées avec :"
+
+#: pompadour_wiki/apps/utils/git_db.py:44
 msgid "Update Wiki: {0}"
 msgstr "Mise à jour du wiki: {0}"
 
@@ -108,11 +102,11 @@ msgstr "Mise à jour du wiki: {0}"
 msgid "Initialize"
 msgstr "Initialisation"
 
-#: pompadour_wiki/apps/utils/git_db.py:164
+#: pompadour_wiki/apps/utils/git_db.py:168
 msgid "Upload document: {0}"
 msgstr "Ajout du document: {0}"
 
-#: pompadour_wiki/apps/utils/git_db.py:182
+#: pompadour_wiki/apps/utils/git_db.py:186
 msgid "Update Wiki: {0} deleted"
 msgstr "Mise à jour du Wiki: {0} supprimé"
 
@@ -120,40 +114,55 @@ msgstr "Mise à jour du Wiki: {0} supprimé"
 msgid "Can't add wiki, another wiki with the same name ({0}) already exists."
 msgstr "Impossible d'ajouter le wiki, un autre du même nom ({0}) existe déjà."
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:21
-msgid "Path"
-msgstr "Chemin"
+#: pompadour_wiki/apps/wiki/models.py:41
+#, fuzzy
+msgid "Wiki deleted"
+msgstr "Mise à jour du Wiki: {0} supprimé"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:43
-msgid "List"
-msgstr "Liste"
-
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:44
-msgid "Numbered list"
-msgstr "Liste numérotée"
-
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:46
-msgid "Block Quote"
-msgstr "Citation"
-
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:47
-msgid "Block Code"
-msgstr "Extrait de code"
-
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:52
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:27
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:95
 msgid "Attach a document"
 msgstr "Joindre un document"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:61
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:33
+msgid "Select already uploaded files"
+msgstr "Sélectionner des fichiers déjà en ligne"
+
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:48
+msgid "Validate"
+msgstr "Valider"
+
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:64
+msgid "Path"
+msgstr "Chemin"
+
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:86
+msgid "List"
+msgstr "Liste"
+
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:87
+msgid "Numbered list"
+msgstr "Liste numérotée"
+
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:89
+msgid "Block Quote"
+msgstr "Citation"
+
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:90
+msgid "Block Code"
+msgstr "Extrait de code"
+
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:104
 msgid "Update comment"
 msgstr "Commentaire de mise à jour"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:65 templates/base.html:90
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:108
+#: templates/base.html:90
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:68
-#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:74
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:111
+#: pompadour_wiki/apps/wiki/templates/wiki/edit.html:117
 msgid "Preview"
 msgstr "Prévisualisation"
 
@@ -165,52 +174,65 @@ msgstr "Supprimer la page"
 msgid "Are you sure you want to delete this page ?"
 msgstr "Êtes vous sûr de vouloir supprimer cette page ?"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:74
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:70
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:131
+msgid "Add a tag"
+msgstr "Ajouter une étiquette"
+
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:75
+msgid "Tag name"
+msgstr "Nom de l'étiquette"
+
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:82
+msgid "Create tag"
+msgstr "Créer une étiquette"
+
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:102
 msgid "history"
 msgstr "Historique"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:77
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:105
 msgid "remove"
 msgstr "Supprimer"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:81
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:109
 msgid "edit"
 msgstr "Éditer"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:92
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:120
 msgid "Warning"
 msgstr "Attention"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:93
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:121
 msgid "This page is being edited by"
 msgstr "Cette page est en cours d'édition par"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:105
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:155
 msgid "Attached documents"
 msgstr "Documents joints"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:121
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:171
 msgid "Wiki history"
 msgstr "Historique du Wiki"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:125
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:175
 msgid "Message"
 msgstr "Message"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:125
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:175
 msgid "Author"
 msgstr "Auteur"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:125
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:175
 msgid "Date"
 msgstr "Date"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:125
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:131
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:175
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:181
 msgid "View"
 msgstr "Voir"
 
-#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:137
+#: pompadour_wiki/apps/wiki/templates/wiki/wiki.html:187
 msgid "Close"
 msgstr "Fermer"
 

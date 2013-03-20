@@ -1,4 +1,10 @@
 David Delassus <david.delassus@9h37.fr>
+20/03/2013 - 18:25
+
+ * mise à jour des traductions ;
+ * nécessite un ./manage.py compilemessages
+
+David Delassus <david.delassus@9h37.fr>
 20/03/2013 - 18:18
 
  * ajout vue des pages taggués ;
