@@ -8,7 +8,7 @@ from django.utils.translation import ugettext
 from django.conf import settings
 
 from pompadour_wiki.apps.utils.decorators import render_to, redirect_to
-from pompadour_wiki.apps.utils import breadcrumbify, urljoin, logdebug
+from pompadour_wiki.apps.utils import breadcrumbify, urljoin
 
 from pompadour_wiki.apps.wiki.models import Wiki
 

@@ -3,10 +3,11 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
+from django.core.mail import send_mail
+from django.core.cache import cache
 from django.utils.translation import ugettext
 from django.utils.timezone import utc
 from django.conf import settings
-from django.core.mail import send_mail
 
 from pompadour_wiki.apps.utils.decorators import render_to, redirect_to
 from pompadour_wiki.apps.utils import urljoin
@@ -32,10 +33,21 @@ def notify(wiki):
     HEAD = wiki.repo.head.commit
     HEADp = wiki.repo.head.commit.parents[0]
 
-    diff = wiki.repo.git.diff(HEADp.hexsha, HEAD.hexsha)
+    # Retrieve diff from cache
+    key = u'diff_{0}_{1}'.format(HEADp.hexsha, HEAD.hexsha)
 
+    if not cache.has_key(key):
+        diff = wiki.repo.git.diff(HEADp.hexsha, HEAD.hexsha)
+
+        cache.set(key, diff, cache.default_timeout)
+
+    else:
+        diff = cache.get(key)
+
+    # Retrieve notifiers
     notifiers = [notifier.email for notifier in WikiNotifier.objects.filter(wiki=wiki)]
 
+    # And send mail
     if notifiers:
         send_mail(u'[wiki/{0}] {1}'.format(wiki, HEAD.message), diff, os.environ['GIT_AUTHOR_EMAIL'], notifiers, fail_silently=True)
 
@@ -65,26 +77,47 @@ def view_page(request, wiki, path):
     if not w.repo.exists(real_path):
         return {'REDIRECT': reverse('edit-page', args=[wiki, path])}
 
-    # Generate markdown document
-    extension = pompadourlinks.makeExtension([
-        ('base_url', u'/wiki/{0}/'.format(wiki)),
-        ('end_url', ''),
-    ])
+    # Retrieve content from cache
+    key = request.get_full_path()
 
-    md = markdown.Markdown(
-        extensions = ['meta', 'codehilite', 'toc', extension],
-        safe_mode = True
-    )
+    if not cache.has_key(key):
+        # Generate markdown document
+        extension = pompadourlinks.makeExtension([
+            ('base_url', u'/wiki/{0}/'.format(wiki)),
+            ('end_url', ''),
+        ])
 
-    content, name, mimetype = w.repo.get_content(real_path)
-    content = md.convert(content.decode('utf-8'))
+        md = markdown.Markdown(
+            extensions = ['meta', 'codehilite', 'toc', extension],
+            safe_mode = True
+        )
+
+        content, name, mimetype = w.repo.get_content(real_path)
+        content = md.convert(content.decode('utf-8'))
+        meta = md.Meta
+
+        cache.set(key, (content, name, mimetype, meta), cache.default_timeout)
+
+    else:
+        content, name, mimetype, meta = cache.get(key)
+
+    # Retrieve diff history from cache
+    key = u'diffs_{0}'.format(request.get_full_path())
+
+    if not cache.has_key(key):
+        diffs = w.repo.get_file_diffs(real_path)
+
+        cache.set(key, diffs, cache.default_timeout)
+
+    else:
+        diffs = cache.get(key)
 
     return {'wiki': {
         'name': os.path.splitext(name)[0],
         'path': path,
-        'meta': md.Meta,
+        'meta': meta,
         'content': content,
-        'history': w.repo.get_file_diffs(real_path),
+        'history': diffs,
         'obj': w,
         'attachments': Attachment.objects.filter(wiki=w, page=os.path.join(wiki, path)),
         'urls': {
@@ -148,7 +181,21 @@ def edit_page(request, wiki, path):
             del(os.environ['GIT_AUTHOR_EMAIL'])
             del(os.environ['USERNAME'])
 
-            return {'REDIRECT': reverse('view-page', args=[wiki, new_path])}
+            # Invalidate cache
+            pageurl = reverse('view-page', args=[wiki, new_path])
+
+            if cache.has_key(pageurl):
+                cache.delete(pageurl)
+
+            key = u'diffs_{0}'.format(pageurl)
+
+            if cache.has_key(key):
+                cache.delete(key)
+
+            cache.delete('LastEdits')
+
+            # And redirect user
+            return {'REDIRECT': pageurl}
 
     # Edit
     else:
@@ -159,13 +206,24 @@ def edit_page(request, wiki, path):
         else:
             form = EditPageForm({'path': path})
 
+    # Retrieve diff history from cache
+    key = u'diffs_{0}'.format(reverse('view-page', args=[wiki, path]))
+
+    if not cache.has_key(key):
+        diffs = w.repo.get_file_diffs(path)
+
+        cache.set(key, diffs, cache.default_timeout)
+
+    else:
+        diffs = cache.get(key)
+
     return {'wiki': {
         'name': os.path.splitext(name)[0],
         'path': path,
         'locked': locked,
         'lock': lock,
         'obj': w,
-        'history': w.repo.get_file_diffs(path),
+        'history': diffs,
         'form': form,
         'attachments': Attachment.objects.filter(wiki=w, page=os.path.join(wiki, path)),
     }}
@@ -188,5 +246,19 @@ def remove_page(request, wiki, path):
 
     # Remove attachements
     Attachment.objects.filter(wiki=w, page=os.path.join(wiki, path)).delete()
+
+    # Invalidate cache
+
+    pageurl = reverse('view-page', args=[wiki, path])
+
+    if cache.has_key(pageurl):
+        cache.delete(pageurl)
+
+    key = u'diffs_{0}'.format(pageurl)
+
+    if cache.has_key(key):
+        cache.delete(key)
+
+    cache.delete('LastEdits')
 
     return wiki, ''

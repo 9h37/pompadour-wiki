@@ -4,6 +4,7 @@ from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string, get_template
 from django.template import RequestContext, Context
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
 from django.utils.translation import ugettext
 from django.conf import settings
 
@@ -12,7 +13,6 @@ from dajax.core import Dajax
 
 from pompadour_wiki.apps.wiki.models import Wiki
 from pompadour_wiki.apps.markdown import pompadourlinks
-from pompadour_wiki.apps.utils import logdebug
 
 from pygments import highlight
 from pygments.lexers import DiffLexer
@@ -160,17 +160,36 @@ def show_diff(request, sha=None, parent_sha=None, wiki=None, path=None):
     except Wiki.DoesNotExist:
         return dajax.json()
 
-    if parent_sha and path:
-        diff = w.repo.git.diff(parent_sha, sha, '--', path.encode('utf-8')).decode('utf-8')
+    def get_diff_from_cache(wiki, sha, parent_sha, path):
+        """ Retrieve diff from cache """
 
-    elif parent_sha and not path:
-        diff = w.repo.git.diff(parent_sha, sha).decode('utf-8')
+        key = u'diff_{0}'.format(sha)
 
-    elif not parent_sha and path:
-        diff = w.repo.git.diff(sha, '--', path.encode('utf-8')).decode('utf-8')
+        if parent_sha:
+            key = u'{0}_{1}'.format(key, parent_sha)
 
-    else:
-        diff = w.repo.git.diff(sha).decode('utf-8')
+        if path:
+            key = u'{0}_{1}'.format(key, path)
+
+        if not cache.has_key(key):
+            # Retrieve real diff
+            if parent_sha and path:
+                diff = w.repo.git.diff(parent_sha, sha, '--', path.encode('utf-8')).decode('utf-8')
+
+            elif parent_sha and not path:
+                diff = w.repo.git.diff(parent_sha, sha).decode('utf-8')
+
+            elif not parent_sha and path:
+                diff = w.repo.git.diff(sha, '--', path.encode('utf-8')).decode('utf-8')
+
+            else:
+                diff = w.repo.git.diff(sha).decode('utf-8')
+
+            cache.set(key, diff, cache.default_timeout)
+
+        return cache.get(key)
+
+    diff = get_diff_from_cache(w, sha, parent_sha, path)
 
     dajax.assign('#diff', 'innerHTML', highlight(diff, DiffLexer(), HtmlFormatter(cssclass='codehilite')))
 

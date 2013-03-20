@@ -93,8 +93,16 @@ STATICFILES_FINDERS = (
     'dajaxice.finders.DajaxiceFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'slalqzzl99ughgcjc8_%as2@8whw5ewy$%+0xf$k7$i+^#^5^o'
+# Secret Key
+
+try:
+    from secret_key import SECRET_KEY
+
+except ImportError:
+    SETTINGS_DIR = os.path.abspath(os.path.dirname(__file__))
+    generate_secret_key(os.path.join(SETTINGS_DIR, 'secret_key.py'))
+
+    from secret_key import SECRET_KEY
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -179,6 +187,7 @@ PROJECT_APPS = (
     'pompadour_wiki.apps.wiki',
     'pompadour_wiki.apps.lock',
     'pompadour_wiki.apps.filemanager',
+    'pompadour_wiki.apps.utils',
 )
 
 INSTALLED_APPS = (
@@ -226,5 +235,12 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'pompadour_cache',
     }
 }

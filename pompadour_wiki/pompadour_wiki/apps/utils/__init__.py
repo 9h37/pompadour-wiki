@@ -3,6 +3,8 @@
 import os
 
 def urljoin(*args):
+    """ Like os.path.join but for URLs """
+
     if len(args) == 0:
         return ""
 
@@ -24,9 +26,10 @@ def urljoin(*args):
     return joined.replace("\\", "/")
 
 def breadcrumbify(path):
+    """ Generates breadcrumb from a path """
+
     breadcrumb_list = path.split('/')
     breadcrumb_urls = []
-
 
     for breadcrumb in breadcrumb_list:
         parts = breadcrumb_urls + [breadcrumb]
@@ -34,7 +37,3 @@ def breadcrumbify(path):
         breadcrumb_urls.append(url)
 
     return zip(breadcrumb_list, breadcrumb_urls)
-
-def logdebug(msg):
-    import sys
-    print >>sys.stderr, '\033[32;01mDEBUG:', msg, '\033[00m'

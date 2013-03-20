@@ -2,6 +2,8 @@
 
 from django.test import TestCase
 
+from django.core.cache import cache
+
 from git_db import Repository
 import subprocess
 
@@ -37,4 +39,24 @@ class RepositoryTest(TestCase):
         # Remove repo
         subprocess.call(['rm', '-rf', '/tmp/test-repo'])
 
-        
+
+class CacheTest(TestCase):
+    """
+    Test cache system
+    """
+
+    def test_cache(self):
+        import random
+
+        i = random.randint(0, 100)
+
+        self.assertFalse(cache.has_key('test_key'))
+
+        cache.set('test_key', i)
+
+        self.assertTrue(cache.has_key('test_key'))
+        self.assertEqual(cache.get('test_key'), i)
+
+        cache.delete('test_key')
+
+        self.assertFalse(cache.has_key('test_key'))

@@ -4,18 +4,15 @@ from django.utils.translation import ugettext
 from django.utils import simplejson as json
 from django.conf import settings
 
-from pompadour_wiki.apps.utils import logdebug
-
 from StringIO import StringIO
 from gitdb import IStream
 from git import *
 from git.exc import InvalidGitRepositoryError
 
+from collections import defaultdict
 from datetime import datetime
-
 import os
 
-from collections import defaultdict
 
 _hook = """#!/bin/sh
 cd ..

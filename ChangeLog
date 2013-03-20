@@ -1,4 +1,14 @@
 David Delassus <david.delassus@9h37.fr>
+20/03/2013 - 1
+:
+ * ajout d'un système de cache afin d'éviter de récupérer trop souvent les informations
+   depuis le dépôt Git ;
+ * voir settings.sample.py pour la nouvelle méthode de génération de la SECRET_KEY ;
+ * voir settings.sample.py pour la configuration du backend de cache (LocMemCache
+   dans le settings.py) ;
+ * test unitaires du système de cache
+
+David Delassus <david.delassus@9h37.fr>
 19/03/2013 - 16:55
 
  * ajout unittest pour le filemanager ;

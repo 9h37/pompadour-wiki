@@ -229,3 +229,15 @@ LOGGING = {
         },
     }
 }
+
+CACHES = {
+    #'default': {
+    #    'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+    #    'LOCATION': 'pompadour_cache',
+    #}
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'pompadour_cache',
+        'TIMEOUT': 600,
+    }
+}

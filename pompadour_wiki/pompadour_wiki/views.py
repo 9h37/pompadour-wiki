@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.core.cache import cache
 from django.contrib.auth.decorators import login_required
 from django.template.defaultfilters import slugify
 
@@ -62,6 +63,8 @@ class LastEdits(object):
                                 # Add the file to the list
                                 self.edits.append(node)
 
+                    # end for each diffs
+
                 # No parents, root commit
                 else:
                     # Add each files in the commit tree
@@ -85,6 +88,10 @@ class LastEdits(object):
                             if node not in self:
                                 # Add to the list
                                 self.edits.append(node)
+
+                    # end for each blob
+            # end for each commits
+        # end for each wikis
 
         self.edits.sort(key=lambda x: x['date'], reverse=True)
 
@@ -143,10 +150,16 @@ class LastEdits(object):
 def home(request):
     wikis = Wiki.objects.all()
 
+    # retrieve last edits from cache
+    if not cache.has_key('LastEdits'):
+        cache.set('LastEdits', LastEdits(wikis)[:10], cache.default_timeout)
+
+    last_edits = cache.get('LastEdits')
+
     return {'wiki': {
         'home': True,
         'array': [wikis[x:x + 4] for x in range(0, len(wikis), 4)],
-        'last_edits': LastEdits(wikis)[:10],
+        'last_edits': last_edits,
     }}
 
 @login_required
@@ -154,10 +167,16 @@ def home(request):
 def search(request):
     wikis = Wiki.objects.all()
 
+    # retrieve last edits from cache
+    if not cache.has_key('LastEdits'):
+        cache.set('last_edits', LastEdits(wikis)[:10], cache.default_timeout)
+
+    last_edits = cache.get('LastEdits')
+
     data = {'wiki': {
         'home': True,
         'array': [wikis[x:x + 4] for x in range(0, len(wikis), 4)],
-        'last_edits': LastEdits(wikis)[:10],
+        'last_edits': last_edits,
     }}
 
     if request.method == 'POST':
@@ -193,8 +212,6 @@ def search(request):
         data['wiki']['search_results'] = results
 
     return data
-
-
 
 @render_to('index.html')
 def login_failed(request, message, status=None, template_name=None, exception=None):
