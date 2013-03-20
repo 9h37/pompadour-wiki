@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from django.db.models.signals import post_delete
 from django.db import models
+
+from django.utils.translation import ugettext
+from django.core.cache import cache
 
 from pompadour_wiki.apps.utils.git_db import Repository
 
@@ -21,6 +25,22 @@ class Wiki(models.Model):
         """ Create repository """
 
         Repository.new(self.gitdir)
+
+
+def invalidate_cache_on_delete(sender, **kwargs):
+    """ When a Wiki is deleted, clear all cache """
+
+    cache.clear()
+
+    # Create empty commit
+    wiki = kwargs.get('instance', None)
+
+    if not wiki:
+        raise AttributeError, 'instance is NoneType'
+
+    wiki.repo.commit(ugettext(u'Wiki deleted'))
+
+post_delete.connect(invalidate_cache_on_delete, sender=Wiki)
 
 class WikiNotifier(models.Model):
     wiki = models.ForeignKey(Wiki)

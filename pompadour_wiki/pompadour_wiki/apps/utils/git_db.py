@@ -54,6 +54,9 @@ class Repository(object):
         """ Initialize a repository and create the root commit """
 
         # Create repository
+        if os.path.exists(gitdir.encode('utf-8')):
+            return cls(gitdir)
+
         repo = Repo.init(gitdir.encode('utf-8'))
         repo.config_writer().set_value('receive', 'denyCurrentBranch', 'ignore')
 
@@ -183,6 +186,11 @@ class Repository(object):
         self.repo.index.commit(ugettext(u'Update Wiki: {0} deleted'.format(path)).encode('utf-8'))
 
         self.parse()
+
+    def commit(self, message):
+        """ Create an empty commit """
+
+        c = Commit.create_from_tree(self.repo, self.repo.tree(), message, head=True)
 
     def get_folder_tree(self, path):
         """ Get list of files contained in ``path``. """
