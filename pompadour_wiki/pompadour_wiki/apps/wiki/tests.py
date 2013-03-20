@@ -8,6 +8,7 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 
 from pompadour_wiki.apps.wiki.models import Wiki
+from pompadour_wiki.apps.tagging.models import Tag
 from pompadour_wiki.views import LastEdits
 
 class UserTest(User):
@@ -128,5 +129,17 @@ class WikiTest(TestCase):
         response = self.client.post('/search', {
             'search-query': u'test héhé',
         })
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_09_tag(self):
+        self.test_04_edit_page()
+
+        tag = Tag()
+        tag.page = u'wiki-test-hehe/Pagé'
+        tag.tag = 'test'
+        tag.save()
+
+        response = self.client.get('/tag/test')
 
         self.assertEqual(response.status_code, 200)

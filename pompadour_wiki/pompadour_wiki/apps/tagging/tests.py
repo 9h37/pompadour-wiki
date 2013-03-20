@@ -43,3 +43,4 @@ class TagTest(TestCase):
 
         c = Tag.objects.count()
         self.assertEqual(c, 0)
+

@@ -24,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^accounts/', include('pompadour_wiki.apps.auth.urls')),
     url(r'^wiki/', include('pompadour_wiki.apps.wiki.urls')),
     url(r'^files/', include('pompadour_wiki.apps.filemanager.urls')),
+    url(r'^tag/', include('pompadour_wiki.apps.tagging.urls')),
 
     url(r'search$', search, name='search'),
 )

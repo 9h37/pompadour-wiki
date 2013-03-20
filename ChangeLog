@@ -1,4 +1,10 @@
 David Delassus <david.delassus@9h37.fr>
+20/03/2013 - 18:18
+
+ * ajout vue des pages taggués ;
+ * ajout test unitaire de la vue précédente.
+
+David Delassus <david.delassus@9h37.fr>
 20/03/2013 - 16:42
 
  * ajout test unitaires pour le système de tag.

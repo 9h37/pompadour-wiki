@@ -11,7 +11,7 @@ import os
 
 TEMPLATE_TAG = """
 <li id="tag_{{ tag.id }}">
-    <a href="#">
+    <a href="{% url 'view-tag' tag.tag %}">
         <i class="icon-tag"></i>
         {{ tag }}
 
