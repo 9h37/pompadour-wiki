@@ -1,4 +1,10 @@
 David Delassus <david.delassus@9h37.fr>
+20/03/2013 - 16:20
+
+ * ajout du système d'ajout/suppression de tag dans le wiki ;
+ * ajout des fonction dajax add_tag et del_tag.
+
+David Delassus <david.delassus@9h37.fr>
 20/03/2013 - 14:51
 
  * ajout de l'application django 'tagging' ;

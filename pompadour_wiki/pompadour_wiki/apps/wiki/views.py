@@ -17,6 +17,7 @@ from pompadour_wiki.apps.wiki.forms import EditPageForm
 
 from pompadour_wiki.apps.lock.models import Lock
 from pompadour_wiki.apps.filemanager.models import Attachment
+from pompadour_wiki.apps.tagging.models import Tag
 
 from pompadour_wiki.apps.markdown import pompadourlinks
 
@@ -119,6 +120,7 @@ def view_page(request, wiki, path):
         'content': content,
         'history': diffs,
         'obj': w,
+        'tags': Tag.objects.filter(page=os.path.join(wiki, path)),
         'attachments': Attachment.objects.filter(wiki=w, page=os.path.join(wiki, path)),
         'urls': {
             'edit': os.path.join(request.path, 'edit'),
@@ -223,9 +225,13 @@ def edit_page(request, wiki, path):
         'locked': locked,
         'lock': lock,
         'obj': w,
+        'tags': Tag.objects.filter(page=os.path.join(wiki, path)),
         'history': diffs,
         'form': form,
         'attachments': Attachment.objects.filter(wiki=w, page=os.path.join(wiki, path)),
+        'urls': {
+            'remove': reverse('remove-page', args=[wiki, path]),
+        },
     }}
 
 @login_required

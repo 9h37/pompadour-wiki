@@ -64,6 +64,31 @@
         </div>
     {% endif %}
 
+    <div id="modal-add-tag" class="modal hide fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>{% trans "Add a tag" %}</h3>
+        </div>
+
+        <div class="modal-body">
+            <form onsubmit="$('#modal-add-tag-submit').click(); return false;">
+                <input type="text" id="modal-form-tag" name="tag" placeholder="{% trans 'Tag name' %}" />
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button id="modal-add-tag-submit" class="btn btn-primary" onclick="Dajaxice.pompadour_wiki.apps.tagging.add_tag(Dajax.process, {'slug': '{{ wiki.obj.slug }}', 'path': '{{ wiki.path }}', 'tag': $('#modal-form-tag').val()});" data-dismiss="modal" aria-hidden="true">
+                <i class="icon-ok icon-white"></i>
+                {% trans "Create tag" %}
+            </button>
+
+            <button class="btn" data-dismiss="modal" aria-hidden="true">
+                <i class="icon-remove"></i>
+                {% trans "Cancel" %}
+            </button>
+        </div>
+    </div>
+
     {% block modal_area2 %}
     {% endblock %}
 {% endblock %}
@@ -97,6 +122,28 @@
                     <a href="mailto:{{ wiki.lock.user.email }}">{{ wiki.lock.user.first_name }} {{ wiki.lock.user.last_name }}</a>.
                 </div>
             {% endif %}
+
+            <div class="wiki-tags">
+                <ul class="nav nav-pills" id="tags">
+                    <li>
+                        <a href="#modal-add-tag" data-toggle="modal">
+                            <i class="icon-tags"></i>
+                            {% trans "Add a tag" %}
+                        </a>
+                    </li>
+
+                    {% for tag in wiki.tags %}
+                        <li id="tag_{{ tag.id }}">
+                            <a href="#">
+                                <i class="icon-tag"></i>
+                                {{ tag }}
+
+                                <i class="icon-remove" onclick="Dajaxice.pompadour_wiki.apps.tagging.del_tag(Dajax.process, {'tag': {{ tag.id }}});"></i>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
 
             <div class="wiki-pane-content">
                 {% block wiki_body %}

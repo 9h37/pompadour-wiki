@@ -71,7 +71,7 @@ def load_menu(request, slug=None, path=None):
     # Retrieve wiki object
     try:
         wiki = Wiki.objects.get(slug=slug)
-    except Wikit.DoesNotExist:
+    except Wiki.DoesNotExist:
         return dajax.json()
 
     # Get repository tree

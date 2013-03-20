@@ -7646,6 +7646,9 @@ hr {
   color: #a83838;
   margin-bottom: 10px;
 }
+.wiki-tags {
+  border-bottom: 1px solid #cccccc;
+}
 .wiki-list .label {
   opacity: 0.85;
   filter: alpha(opacity=85);
@@ -7715,6 +7718,7 @@ hr {
 }
 #form-edit {
   text-align: center;
+  margin-top: 10px;
 }
 #edit-preview {
   border: 1px solid #cccccc;
