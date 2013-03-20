@@ -185,6 +185,7 @@ WSGI_APPLICATION = 'pompadour_wiki.wsgi.application'
 PROJECT_APPS = (
     'django_openid_auth',
     'pompadour_wiki.apps.wiki',
+    'pompadour_wiki.apps.tagging',
     'pompadour_wiki.apps.lock',
     'pompadour_wiki.apps.filemanager',
     'pompadour_wiki.apps.utils',
