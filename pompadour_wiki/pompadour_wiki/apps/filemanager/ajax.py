@@ -3,6 +3,9 @@
 from dajaxice.decorators import dajaxice_register
 from dajax.core import Dajax
 
+from django.template.loader import get_template
+from django.template import Context
+
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 
@@ -70,6 +73,15 @@ def attach_doc(request, wiki=None, files=None, page=None):
 
             a.save()
 
+            tmpl = get_template('wiki/attachitem.html')
+            rendered = tmpl.render(Context({
+                'wiki': {
+                    'obj': w,
+                },
+                'doc': a,
+            }))
+
+            dajax.add_data(rendered, 'append_attached_document')
             dajax.alert(ugettext(u'{0} attached to {1}').format(f, page))
 
     return dajax.json()

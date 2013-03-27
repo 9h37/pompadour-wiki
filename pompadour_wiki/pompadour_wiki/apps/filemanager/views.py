@@ -168,7 +168,7 @@ def upload_document(request, wiki):
 
         if format == "json":
             data = {
-                'url': doc_path
+                'url': doc_path,
             }
 
             return HttpResponse(json.dumps(data))

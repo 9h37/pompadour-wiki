@@ -138,7 +138,7 @@
                                 <i class="icon-tag"></i>
                                 {{ tag }}
 
-                                <i class="icon-remove" onclick="Dajaxice.pompadour_wiki.apps.tagging.del_tag(Dajax.process, {'tag': {{ tag.id }}});"></i>
+                                <i class="icon-remove" onclick="Dajaxice.pompadour_wiki.apps.tagging.del_tag(Dajax.process, {'tag': {{ tag.id }}}); return false;"></i>
                             </a>
                         </li>
                     {% endfor %}

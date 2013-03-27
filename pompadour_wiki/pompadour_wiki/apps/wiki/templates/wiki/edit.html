@@ -17,6 +17,11 @@
                 Dajaxice.pompadour_wiki.apps.filemanager.attach_doc(Dajax.process, {'wiki': '{{ wiki.obj.slug }}', 'files': [data.url], 'page': '{{ wiki.path }}'});
             });
         });
+
+        function append_attached_document(html)
+        {
+            $('#attachments').append(html);
+        }
     </script>
 {% endblock %}
 
