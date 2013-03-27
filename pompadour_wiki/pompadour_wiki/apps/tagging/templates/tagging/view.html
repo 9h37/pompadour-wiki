@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+    <h2>{% trans "Pages tagged as:" %} {{ wiki.tagname }}</h2>
+
+    <hr/>
+
+    <ul class="nav wiki-list">
+        {% for tag in wiki.tags %}
+            <li>
+                <span class="label label-info">{{ tag.wiki.name|title }}</span>
+                <span><a href="{% url 'view-page' tag.wiki.slug tag.path %}">{{ tag.path }}</a></span>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
