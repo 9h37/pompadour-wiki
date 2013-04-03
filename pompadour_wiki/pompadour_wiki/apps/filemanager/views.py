@@ -83,7 +83,7 @@ def index(request, wiki, path):
         # Append files to the list for the view
         for f in files:
             filelist.append({
-                'url': urljoin(path, f['name']),
+                'url': urljoin(path, f['name'].encode('utf-8')),
                 'name': f['name'],
                 'mimetype': f['type']
             })

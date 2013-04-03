@@ -1,4 +1,9 @@
 David Delassus <david.delassus@9h37.fr>
+03/04/2013 - 14:35
+
+ * fix bug utf-8 dans filemanager.views ;
+
+David Delassus <david.delassus@9h37.fr>
 27/03/2013 - 10:49
 
  * ajout du document joint à la liste après upload.
