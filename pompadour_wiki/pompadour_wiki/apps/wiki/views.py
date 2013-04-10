@@ -9,6 +9,8 @@ from django.utils.translation import ugettext
 from django.utils.timezone import utc
 from django.conf import settings
 
+from urllib import unquote
+
 from pompadour_wiki.apps.utils.decorators import render_to, redirect_to
 from pompadour_wiki.apps.utils import urljoin
 
@@ -184,7 +186,7 @@ def edit_page(request, wiki, path):
             del(os.environ['USERNAME'])
 
             # Invalidate cache
-            pageurl = reverse('view-page', args=[wiki, new_path])
+            pageurl = unquote(reverse('view-page', args=[wiki, new_path])).decode('utf-8')
 
             if cache.has_key(pageurl):
                 cache.delete(pageurl)

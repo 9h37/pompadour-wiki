@@ -1,4 +1,10 @@
 David Delassus <david.delassus@9h37.fr>
+10/04/2013 - 10:36
+
+ * fix cache invalidation ;
+ * fix Attachment creation in attach_doc (filemanager.ajax) ;
+
+David Delassus <david.delassus@9h37.fr>
 03/04/2013 - 14:35
 
  * fix bug utf-8 dans filemanager.views ;

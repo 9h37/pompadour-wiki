@@ -11,7 +11,7 @@ from django.utils.translation import ugettext
 
 from pompadour_wiki.apps.filemanager.models import Attachment
 from pompadour_wiki.apps.wiki.models import Wiki
-from pompadour_wiki.apps.utils import urljoin
+from pompadour_wiki.apps.utils import urljoin, decode_unicode_references
 
 import os
 
@@ -58,6 +58,8 @@ def attach_doc(request, wiki=None, files=None, page=None):
         w = Wiki.objects.get(slug=wiki)
     except Wiki.DoesNotExist:
         return dajax.json()
+
+    page = decode_unicode_references(page)
 
     for f in files:
         urlpage = urljoin(wiki, page.encode('utf-8'))

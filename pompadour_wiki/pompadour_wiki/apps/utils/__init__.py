@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import re
 
 def urljoin(*args):
     """ Like os.path.join but for URLs """
@@ -37,3 +38,15 @@ def breadcrumbify(path):
         breadcrumb_urls.append(url)
 
     return zip(breadcrumb_list, breadcrumb_urls)
+
+def decode_unicode_references(data):
+    """ Replace '&#<unicode id>' by the unicode character """
+
+    def _callback(matches):
+        id = matches.group(1)
+        try:
+            return unichr(int(id))
+        except:
+            return id
+
+    return re.sub("&#(\d+)(;|(?=\s))", _callback, data)
