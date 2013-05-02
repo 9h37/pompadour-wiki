@@ -24,24 +24,19 @@ def remove_doc(request, wiki=None, files=None):
 
     try:
         w = Wiki.objects.get(slug=wiki)
+
     except Wiki.DoesNotExist:
         return dajax.json()
    
-    os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
-    os.environ['GIT_AUTHOR_EMAIL'] = request.user.email
-    os.environ['USERNAME'] = str(request.user.username)
-
     for f in files:
         path = os.path.join('__media__', *f.split('/'))
 
-        w.repo.rm_content(path)
+        w.repo.delete(path)
+        w.repo.commit(request.user, ugettext(u'Update Wiki: {0} deleted'.format(path)).encode('utf-8'))
 
         # Remove attachments
         Attachment.objects.filter(file=f).delete()
 
-    del(os.environ['GIT_AUTHOR_NAME'])
-    del(os.environ['GIT_AUTHOR_EMAIL'])
-    del(os.environ['USERNAME'])
 
     dajax.redirect(reverse('filemanager-index', args=[wiki, '']))
 
@@ -56,6 +51,7 @@ def attach_doc(request, wiki=None, files=None, page=None):
 
     try:
         w = Wiki.objects.get(slug=wiki)
+
     except Wiki.DoesNotExist:
         return dajax.json()
 
@@ -71,7 +67,7 @@ def attach_doc(request, wiki=None, files=None, page=None):
             a.wiki = w
             a.page = urlpage
             a.file = f
-            a.mimetype = w.repo.get_file_mimetype(os.path.join('__media__', *f.split('/')))
+            a.mimetype = w.repo.mimetype(os.path.join('__media__', *f.split('/')))
 
             a.save()
 

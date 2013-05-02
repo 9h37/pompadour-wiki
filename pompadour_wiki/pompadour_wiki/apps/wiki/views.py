@@ -27,20 +27,19 @@ import markdown
 import datetime
 import os
 
-def notify(wiki):
+def notify(wiki, user):
     """ Send email notification after a commit. """
 
     if not settings.EMAIL_NOTIFY:
         return
 
-    HEAD = wiki.repo.head.commit
-    HEADp = wiki.repo.head.commit.parents[0]
+    HEAD, HEADp = wiki.repo.log(limit=2)
 
     # Retrieve diff from cache
-    key = u'diff_{0}_{1}'.format(HEADp.hexsha, HEAD.hexsha)
+    key = u'diff_{0}_{1}'.format(HEADp.hex, HEAD.hex)
 
     if not cache.has_key(key):
-        diff = wiki.repo.git.diff(HEADp.hexsha, HEAD.hexsha)
+        diff = wiki.repo.diff(HEADp.hex, HEAD.hex)
 
         cache.set(key, diff, cache.default_timeout)
 
@@ -52,27 +51,16 @@ def notify(wiki):
 
     # And send mail
     if notifiers:
-        send_mail(u'[wiki/{0}] {1}'.format(wiki, HEAD.message), diff, os.environ['GIT_AUTHOR_EMAIL'], notifiers, fail_silently=True)
+        send_mail(u'[wiki/{0}] {1}'.format(wiki, HEAD.message), diff, user.email, notifiers, fail_silently=True)
 
 @login_required
 @render_to('wiki/view.html')
 def view_page(request, wiki, path):
     w = get_object_or_404(Wiki, slug=wiki)
 
-    if not path:
+    if not path or w.repo.is_dir(path):
         return {'REDIRECT': urljoin(request.path, settings.WIKI_INDEX)}
 
-    # If path is a folder
-    if w.repo.is_dir(path):
-        if settings.WIKI_INDEX:
-            return {'REDIRECT': urljoin(request.path, settings.WIKI_INDEX)}
-
-        pages, name = r.get_tree(path)
-        return {'wiki': {
-            'name': name,
-            'pages': pages,
-            'obj': w
-        }}
 
     real_path = u'{0}.md'.format(path)
 
@@ -95,7 +83,16 @@ def view_page(request, wiki, path):
             safe_mode = True
         )
 
-        content, name, mimetype = w.repo.get_content(real_path)
+        # Read content
+        f = w.repo.open(real_path)
+        content = f.read()
+        f.close()
+
+        name = real_path
+        mimetype = w.repo.mimetype(real_path)
+
+        f.close()
+
         content = md.convert(content.decode('utf-8'))
         meta = md.Meta
 
@@ -108,7 +105,7 @@ def view_page(request, wiki, path):
     key = u'diffs_{0}'.format(request.get_full_path())
 
     if not cache.has_key(key):
-        diffs = w.repo.get_file_diffs(real_path)
+        diffs = w.repo.diffs(name=real_path, limit=-1)
 
         cache.set(key, diffs, cache.default_timeout)
 
@@ -168,22 +165,23 @@ def edit_page(request, wiki, path):
         form = EditPageForm(request.POST)
 
         if form.is_valid():
+            # Get path
             new_path = u'-'.join(form.cleaned_data['path'].split(u' '))
             new_fullpath = u'{0}.md'.format(new_path)
 
-            os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
-            os.environ['GIT_AUTHOR_EMAIL'] = request.user.email.encode('utf-8')
-            os.environ['USERNAME'] = str(request.user.username)
+            # Generate commit message
+            commit = form.cleaned_data['comment'].encode('utf-8') or ugettext(u'Update Wiki: {0}').format(path).encode('utf-8')
 
-            commit = form.cleaned_data['comment'].encode('utf-8') or None
+            # Open it, and write in
+            f = w.repo.open(new_fullpath, mode='wb')
+            f.write(form.cleaned_data['content'])
+            f.close()
 
-            w.repo.set_content(new_fullpath, form.cleaned_data['content'], commit_msg=commit)
+            # Finally, commit
+            w.repo.commit(request.user, commit)
 
-            notify(w)
-
-            del(os.environ['GIT_AUTHOR_NAME'])
-            del(os.environ['GIT_AUTHOR_EMAIL'])
-            del(os.environ['USERNAME'])
+            # Then, notify by mail.
+            notify(w, request.user)
 
             # Invalidate cache
             pageurl = unquote(reverse('view-page', args=[wiki, new_path])).decode('utf-8')
@@ -203,8 +201,15 @@ def edit_page(request, wiki, path):
 
     # Edit
     else:
-        if not w.repo.is_dir(path) and w.repo.exists(u'{0}.md'.format(path)):
-            content, name, mimetype = w.repo.get_content(u'{0}.md'.format(path))
+        real_path = u'{0}.md'.format(path)
+        
+        if not w.repo.is_dir(path) and w.repo.exists(real_path):
+
+             # Read content
+            f = w.repo.open(real_path)
+            content = f.read()
+            f.close()
+
             form = EditPageForm({'path': path, 'content': content, 'comment': None})
 
         else:
@@ -214,7 +219,7 @@ def edit_page(request, wiki, path):
     key = u'diffs_{0}'.format(reverse('view-page', args=[wiki, path]))
 
     if not cache.has_key(key):
-        diffs = w.repo.get_file_diffs(path)
+        diffs = w.repo.diffs(name=path, limit=-1)
 
         cache.set(key, diffs, cache.default_timeout)
 
@@ -241,16 +246,8 @@ def edit_page(request, wiki, path):
 def remove_page(request, wiki, path):
     w = get_object_or_404(Wiki, slug=wiki)
 
-    # Remove page
-    os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
-    os.environ['GIT_AUTHOR_EMAIL'] = request.user.email.encode('utf-8')
-    os.environ['USERNAME'] = str(request.user.username)
-
-    w.repo.rm_content(u'{0}.md'.format(path))
-
-    del(os.environ['GIT_AUTHOR_NAME'])
-    del(os.environ['GIT_AUTHOR_EMAIL'])
-    del(os.environ['USERNAME'])
+    w.repo.delete(u'{0}.md'.format(path))
+    w.repo.commit(request.user, ugettext(u'Update Wiki: {0} deleted'.format(path)).encode('utf-8'))
 
     # Remove attachements
     Attachment.objects.filter(wiki=w, page=os.path.join(wiki, path)).delete()

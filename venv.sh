@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cwd=`pwd`
-vdir=$cwd/pompadour_wiki/.venv
+vdir=$cwd/.venv
 
 if [ "$1" != "update" ]
 then
@@ -11,14 +11,14 @@ then
      virtualenv $vdir || exit 1
 
      echo "-- Activating virtual environment: $vdir..."
-     source $vdir/bin/activate || exit 1
+     . $vdir/bin/activate || exit 1
 
      echo "-- Installing dependencies in virtual environment..."
      pip install -r requirements.txt
 else
      echo "-- Activating virtual environment: $vdir..."
-     source $vdir/bin/activate || exit 1
-     
+     . $vdir/bin/activate || exit 1
+
      echo "-- Updating virtual environment: $vdir..."
      pip install -U -r requirements.txt
 fi

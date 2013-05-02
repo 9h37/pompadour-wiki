@@ -77,15 +77,23 @@ def index(request, wiki, path):
 
     # Check if the directory exists
     if w.repo.exists(gitfolder):
-        # Get file list
-        files = w.repo.get_folder_tree(gitfolder)
+        # List directory
+        directories, files = w.repo.listdir(gitfolder)
 
-        # Append files to the list for the view
+        # Append directories
+        for d in directories:
+            filelist.append({
+                'url': urljoin(path, d.encode('utf-8')),
+                'name': d,
+                'mimetype': 'inode/directory'
+            })
+
+        # Append files
         for f in files:
             filelist.append({
-                'url': urljoin(path, f['name'].encode('utf-8')),
-                'name': f['name'],
-                'mimetype': f['type']
+                'url': urljoin(path, f.encode('utf-8')),
+                'name': f,
+                'mimetype': w.repo.mimetype(os.path.join(gitfolder, f))
             })
 
     return {'wiki': {
@@ -117,9 +125,13 @@ def view_document(request, wiki, path):
         return redirect('filemanager-index', wiki, path)
 
     # Return content
-    content = w.repo.get_content(gitpath)
+    f = w.repo.open(gitpath)
+    content = f.read()
+    f.close()
 
-    return HttpResponse(content[0], content_type=content[2])
+    mimetype = w.repo.mimetype(gitpath)
+
+    return HttpResponse(content, content_type=mimetype)
 
 @login_required
 def upload_document(request, wiki):
@@ -138,33 +150,11 @@ def upload_document(request, wiki):
 
         doc = request.FILES['doc']
 
-        # Make sure that the filename is unique
-        # NB: if we upload the exact same file, it doesn't matter, only one blob
-        #     will be stored in the repository.
+        # Add the file to the repository, save() returns the new file path.
+        git_path = os.path.join(path, doc.name)
+        doc_path = w.repo.save(git_path, doc)
 
-        doc_name = doc.name
-        doc_path = os.path.join(path, doc_name)
-        git_path = os.path.join('__media__', doc_path)
-
-        # if the path exists, add a uniqid to the file
-        while w.repo.exists(git_path):
-            uniqid = str(random.randint(0, 9))
-
-            doc_name = u'{0}{1}'.format(uniqid, doc_name)
-            doc_path = os.path.join(path, doc_name)
-            git_path = os.path.join('__media__', doc_path)
-
-        # Finally put file into the Git repository
-
-        os.environ['GIT_AUTHOR_NAME'] = u'{0} {1}'.format(request.user.first_name, request.user.last_name).encode('utf-8')
-        os.environ['GIT_AUTHOR_EMAIL'] = request.user.email.encode('utf-8')
-        os.environ['USERNAME'] = str(request.user.username)
-
-        w.repo.put_uploaded_file(git_path, doc)
-
-        del(os.environ['GIT_AUTHOR_NAME'])
-        del(os.environ['GIT_AUTHOR_EMAIL'])
-        del(os.environ['USERNAME'])
+        w.repo.commit(request.user, ugettext(u'Upload document: {0}').format(path))
 
         if format == "json":
             data = {

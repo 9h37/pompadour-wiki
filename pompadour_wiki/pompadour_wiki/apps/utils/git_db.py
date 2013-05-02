@@ -161,6 +161,8 @@ class Repository(object):
                 f.write(chunk)
 
         # Add it to the repository
+        import sys
+        print >>sys.stderr, type(path), path
         self.repo.index.add([path.encode('utf-8')])
 
         # And commit

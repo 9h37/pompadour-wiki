@@ -11,6 +11,7 @@ from pompadour_wiki.apps.wiki.models import Wiki
 from datetime import datetime
 import os
 
+
 class LastEdits(object):
     """
     This class is implemented as a list to make algorithm easier
@@ -24,38 +25,27 @@ class LastEdits(object):
 
         for wiki in wikis:
             # Get the last ten commits
-            last_10_commits = wiki.repo.get_history(limit=10)
+            last_10_commits = wiki.repo.log(limit=10)
 
             # And for each commits, add the modified files to the list
             for c in last_10_commits:
                 if c.parents:
-                    diffs = c.diff(c.parents[0])
+                    diff = c.tree.diff(c.parents[0].tree)
 
-                    for d in diffs:
-                        # If a_blob is None, the file was deleted
-                        # If b_blob is None, the file was added
-                        # If none of them are None, the file was modified
-
-                        blob = d.a_blob
-
-                        # We don't want deleted files
-                        if not blob:
-                            continue
-
-                        blob.path = self.sanitize_path(blob.path)
-
+                    for patch in diff:
+                        path = patch.new_file_path
 
                         # Exclude __media__ files :
-                        if not blob.path.startswith('__media__'):
+                        if not path.startswith('__media__'):
                             node = {
                                 'wiki': wiki,
-                                'filename': blob.path,
-                                'page': os.path.splitext(blob.path)[0],
+                                'filename': path,
+                                'page': os.path.splitext(path)[0],
                                 'author': {
                                     'name': c.author.name,
-                                    'email': c.author.email,
+                                    'email': c.author.email
                                 },
-                                'date': datetime.fromtimestamp(c.authored_date),
+                                'date': datetime.fromtimestamp(c.commit_time),
                             }
 
                             # Check if the file is in the list
@@ -68,20 +58,18 @@ class LastEdits(object):
                 # No parents, root commit
                 else:
                     # Add each files in the commit tree
-                    for blob in c.tree.traverse():
-                        blob.path = self.sanitize_path(blob.path)
-
+                    for entry in wiki.repo.walk():
                         # Except __media__ files
-                        if not blob.path.startswith('__media__'):
+                        if not entry.path.startswith('__media__'):
                             node = {
                                 'wiki': wiki,
-                                'filename': blob.path,
-                                'page': os.path.splitext(blob.path)[0],
+                                'filename': entry.path,
+                                'page': os.path.splitext(entry.path)[0],
                                 'author': {
                                     'name': c.author.name,
-                                    'email': c.author.email,
+                                    'email': c.author.email
                                 },
-                                'date': datetime.fromtimestamp(c.authored_date),
+                                'date': datetime.fromtimestamp(c.commit_time),
                             }
 
                             # Check if the file is in the list
@@ -94,30 +82,6 @@ class LastEdits(object):
         # end for each wikis
 
         self.edits.sort(key=lambda x: x['date'], reverse=True)
-
-    def sanitize_path(self, path):
-        """
-        If path[0] is ", then the path contains a UTF-8 string, why ?
-
-        The output of git diff encode UTF-8 filenames :
-
-            diff --git "a/H\303\251h\303\251.md" "b/H\303\251h\303\251.md"
-
-        So, when GitPython read the diff output, it generate this path :
-
-            "H\303\251h\303\251.md"
-
-        And the path string (not unicode), contains :
-
-            '"H\\303\\251h\\303\\251.md"'
-
-        """
-
-        if path[0] == '"':
-            path = path[1:-1].decode('string-escape')
-
-        return path.decode('utf-8')
-
 
     # list API
 
@@ -191,19 +155,16 @@ def search(request):
             # Do the search
             for filename, matches in wiki.repo.search(query):
                 # Get informations from the file
-                last_commit = wiki.repo.get_file_history('{0}.md'.format(filename))[0]
+                last_commit = wiki.repo.log(name='{0}.md'.format(filename), limit=1)[0]
 
                 # and append to the list
                 results.append({
-                    'id': '{0}_{1}'.format(last_commit.hexsha, slugify(filename)),
+                    'id': '{0}_{1}'.format(last_commit.hex, slugify(filename)),
                     'wiki': wiki,
                     'file': filename,
                     'matches': matches,
-                    'author': {
-                        'name': last_commit.author.name,
-                        'email': last_commit.author.email
-                    },
-                    'date': datetime.fromtimestamp(last_commit.authored_date),
+                    'author': last_commit.author,
+                    'date': datetime.fromtimestamp(last_commit.commit_time),
                 })
 
         # now sort the list

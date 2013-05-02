@@ -6,7 +6,7 @@ from django.db import models
 from django.utils.translation import ugettext
 from django.core.cache import cache
 
-from pompadour_wiki.apps.utils.git_db import Repository
+from gitstorage.StorageBackend import GitStorage
 
 class Wiki(models.Model):
     name = models.CharField(max_length=50)
@@ -19,12 +19,12 @@ class Wiki(models.Model):
 
     @property
     def repo(self):
-        return Repository(self.gitdir)
+        return GitStorage(self.gitdir)
 
     def create_repo(self):
         """ Create repository """
 
-        Repository.new(self.gitdir)
+        GitStorage.create_storage(self.gitdir)
 
 
 def invalidate_cache_on_delete(sender, **kwargs):
@@ -38,7 +38,9 @@ def invalidate_cache_on_delete(sender, **kwargs):
     if not wiki:
         raise AttributeError, 'instance is NoneType'
 
-    wiki.repo.commit(ugettext(u'Wiki deleted'))
+    # current user ???
+
+    wiki.repo.commit(None, ugettext(u'Wiki deleted'))
 
 post_delete.connect(invalidate_cache_on_delete, sender=Wiki)
 
