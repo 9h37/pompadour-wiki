@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cwd=`pwd`
-vdir=$cwd/.venv
+vdir=$cwd/pompadour_wiki/.venv
 
 if [ "$1" != "update" ]
 then

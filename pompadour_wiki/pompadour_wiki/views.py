@@ -133,7 +133,7 @@ def search(request):
 
     # retrieve last edits from cache
     if not cache.has_key('LastEdits'):
-        cache.set('last_edits', LastEdits(wikis)[:10], cache.default_timeout)
+        cache.set('LastEdits', LastEdits(wikis)[:10], cache.default_timeout)
 
     last_edits = cache.get('LastEdits')
 
@@ -153,15 +153,16 @@ def search(request):
         # For each wiki
         for wiki in wikis:
             # Do the search
-            for filename, matches in wiki.repo.search(query):
+            for filename, matches in wiki.repo.search(query, exclude=r'^__media__'):
                 # Get informations from the file
-                last_commit = wiki.repo.log(name='{0}.md'.format(filename), limit=1)[0]
+                print filename
+                last_commit = wiki.repo.log(name=filename, limit=1)[0]
 
                 # and append to the list
                 results.append({
                     'id': '{0}_{1}'.format(last_commit.hex, slugify(filename)),
                     'wiki': wiki,
-                    'file': filename,
+                    'file': os.path.splitext(filename)[0],
                     'matches': matches,
                     'author': last_commit.author,
                     'date': datetime.fromtimestamp(last_commit.commit_time),

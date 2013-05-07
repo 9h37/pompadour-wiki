@@ -151,7 +151,7 @@ def upload_document(request, wiki):
         doc = request.FILES['doc']
 
         # Add the file to the repository, save() returns the new file path.
-        git_path = os.path.join(path, doc.name)
+        git_path = os.path.join('__media__', path, doc.name)
         doc_path = w.repo.save(git_path, doc)
 
         w.repo.commit(request.user, ugettext(u'Upload document: {0}').format(path))
