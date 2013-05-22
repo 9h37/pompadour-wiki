@@ -52,7 +52,13 @@ def decode_unicode_references(data):
     return re.sub("&#(\d+)(;|(?=\s))", _callback, data)
 
 def stripspecialchars(input_str):
-    """ Remove special chars in UTF-8 string """
+    """
+        Remove special chars in UTF-8 string.
+
+        :param input_str: String to convert.
+        :type input_str: unicode
+        :returns: str
+    """
 
     import unicodedata
 
