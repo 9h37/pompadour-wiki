@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.core.files.base import ContentFile
 from django.db.models.signals import post_delete
 from django.db import models
 
@@ -21,10 +22,15 @@ class Wiki(models.Model):
     def repo(self):
         return GitStorage(self.gitdir)
 
-    def create_repo(self):
+    def create_repo(self, user):
         """ Create repository """
 
-        GitStorage.create_storage(self.gitdir)
+        st = GitStorage.create_storage(self.gitdir)
+
+        content = ContentFile('Home')
+        st.save('Home.md', content)
+        st.commit(user, 'Initialize repository')
+
 
 
 def invalidate_cache_on_delete(sender, **kwargs):
