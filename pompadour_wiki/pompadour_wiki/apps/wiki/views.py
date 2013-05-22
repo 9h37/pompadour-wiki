@@ -12,7 +12,7 @@ from django.conf import settings
 from urllib import unquote
 
 from pompadour_wiki.apps.utils.decorators import render_to, redirect_to
-from pompadour_wiki.apps.utils import urljoin
+from pompadour_wiki.apps.utils import urljoin, stripspecialchars
 
 from pompadour_wiki.apps.wiki.models import Wiki, WikiNotifier
 from pompadour_wiki.apps.wiki.forms import EditPageForm
@@ -56,7 +56,9 @@ def notify(wiki, user):
 @login_required
 @render_to('wiki/view.html')
 def view_page(request, wiki, path):
-    w = get_object_or_404(Wiki, slug=wiki)
+    path = stripspecialchars(path)
+
+    w = get_object_or_404(Wiki, slug=wiki)    
 
     if not path or w.repo.is_dir(path):
         return {'REDIRECT': urljoin(request.path, settings.WIKI_INDEX)}
@@ -130,6 +132,8 @@ def view_page(request, wiki, path):
 @login_required
 @render_to('wiki/edit.html')
 def edit_page(request, wiki, path):
+    path = stripspecialchars(path)
+
     locked = False
 
     # check if a lock exists
@@ -244,6 +248,8 @@ def edit_page(request, wiki, path):
 @login_required
 @redirect_to(lambda wiki, path: reverse('view-page', args=[wiki, path]))
 def remove_page(request, wiki, path):
+    path = stripspecialchars(path)
+
     w = get_object_or_404(Wiki, slug=wiki)
 
     w.repo.delete(u'{0}.md'.format(path))

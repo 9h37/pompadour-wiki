@@ -50,3 +50,12 @@ def decode_unicode_references(data):
             return id
 
     return re.sub("&#(\d+)(;|(?=\s))", _callback, data)
+
+def stripspecialchars(input_str):
+    """ Remove special chars in UTF-8 string """
+
+    import unicodedata
+
+    nfkd_form = unicodedata.normalize('NFKD', unicode(input_str))
+
+    return ''.join([c for c in nfkd_form if not unicodedata.combining(c)])
