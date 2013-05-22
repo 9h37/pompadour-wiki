@@ -2,7 +2,7 @@ Be sure to have the virtualenv activated before doing anything else !
 
 Migrate Git database :
 
-    (virtualenv) $ python migrategitdb.py path/to/git/repo path/to/other/git/repo
+    (virtualenv) $ python migrategitdb.py <list of paths to your repositories>
 
 Migrate metadata stored in SQL database :
 
@@ -10,4 +10,4 @@ Migrate metadata stored in SQL database :
     >>> import sys, os
     >>> sys.path.append(os.getcwd())
     >>> import migrategitdb
-    >>> migrategitdb.django_migrate()
+    >>> migrategitdb.MigrateDB.django_migrate()
