@@ -56,6 +56,9 @@ def stripspecialchars(input_str):
 
     import unicodedata
 
+    # will decompose UTF-8 entities ('é' becomes 'e\u0301')
     nfkd_form = unicodedata.normalize('NFKD', unicode(input_str))
 
+    # unicodedata.combining() returns 0 if the character is a normal character,
+    # so this loop help us converting the string in ASCII-format
     return ''.join([c for c in nfkd_form if not unicodedata.combining(c)])
