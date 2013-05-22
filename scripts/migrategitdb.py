@@ -4,14 +4,6 @@
 import subprocess
 import os
 
-def stripspecialchars(input_str):
-    """ Remove special chars in UTF-8 string """
-
-    import unicodedata
-
-    nfkd_form = unicodedata.normalize('NFKD', unicode(input_str))
-
-    return ''.join([c for c in nfkd_form if not unicodedata.combining(c)])
 
 class MigrateException(Exception):
     def __init__(self, msg):
@@ -43,7 +35,7 @@ class MigrateDB(object):
         newfiles = []
 
         for filename in files:            
-            newfilepath = stripspecialchars(filename)
+            newfilepath = self.stripspecialchars(filename)
 
             print "---- Moving", filename, "to", newfilepath
             
@@ -67,12 +59,23 @@ class MigrateDB(object):
         from pompadour_wiki.apps.tagging.models import Tag
 
         for a in Attachment.objects.all():
-            a.page = stripspecialchars(a.page)
+            a.page = cls.stripspecialchars(a.page)
+            a.file = cls.stripspecialchars(a.file)
             a.save()
 
         for t in Tag.objects.all():
-            t.page = stripspecialchars(t.page)
+            t.page = cls.stripspecialchars(t.page)
             t.save()
+
+    @staticmethod
+    def stripspecialchars(input_str):
+        """ Remove special chars in UTF-8 string """
+
+        import unicodedata
+
+        nfkd_form = unicodedata.normalize('NFKD', unicode(input_str))
+
+        return ''.join([c for c in nfkd_form if not unicodedata.combining(c)])
 
 
 
