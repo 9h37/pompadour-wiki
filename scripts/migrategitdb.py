@@ -46,7 +46,7 @@ class MigrateDB(object):
 
             os.rename(filename, newfilepath)
 
-            newfiles.append(newfilepath[len(self.path) + 1:])
+            newfiles.append(os.path.relpath(newfilepath, self.path))
 
         # commit it
 
